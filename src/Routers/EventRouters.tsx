@@ -12,6 +12,8 @@ export const getAllOrganizers = async () => {
   }
 };
 
+
+
 export const getEventById = async (id: string) => {
   try {
     const response = await axios.get(`${API_URL}/${id}`);
