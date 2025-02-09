@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAllOrganizers } from "../Routers/EventRouters.tsx";
+import { getAllOrganizers } from "../api/eventApi.tsx";
 
 
 export const getUserEvents = async () => {

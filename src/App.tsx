@@ -5,13 +5,13 @@ import React from "react"
 import LoginPage from "./pages/Login.tsx"
 import EventForm from "./pages/Add_guest.tsx"
 import Add_guest from "./pages/Add_guest.tsx"
-import Add_event from "./pages/Add_event.tsx"
+import Add_event from "./pages/AddEventPage.tsx"
 import RegisterPage from "./pages/RegisterPage.tsx"
 import Home from "./pages/Home.tsx"
 
 export default function App() {
     return <div className="">
         <Home/>
-       <Add_event/>
+       
     </div>
 } 

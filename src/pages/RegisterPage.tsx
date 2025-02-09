@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { createOrganizer } from "../Routers/OrginazerRouters.tsx";
+import { createOrganizer } from "../api/OrginazerRouters.tsx";
 import "../styles/RegisterPage.css"; // ייבוא קובץ העיצוב
 
 const RegisterPage = () => {
