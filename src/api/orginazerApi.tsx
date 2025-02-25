@@ -1,54 +1,56 @@
-// services/organizerService.ts
-import axios from 'axios';
-
+// src/API/organizerAPI.tsx
 const API_URL = 'https://localhost:7112/api/Organizer'; // כתובת ה-API שלך
 
-export const getAllOrganizers = async () => {
-  try {
-    const response = await axios.get(API_URL);
-    return response.data; // מחזיר את רשימת המארגנים
-  } catch (error) {
-    console.error('Error fetching organizers:', error);
-    return [];
-  }
+// פונקציה לקבלת כל המארגנים
+export const getAllOrganizers = async (): Promise<any[]> => {
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+        throw new Error('Failed to fetch organizers');
+    }
+    return await response.json();
 };
 
-export const getOrganizerById = async (id: string) => {
-  try {
-    const response = await axios.get(`${API_URL}/${id}`);
-    return response.data; // מחזיר את המארגן לפי מזהה
-  } catch (error) {
-    console.error('Error fetching organizer:', error);
-    return null;
-  }
+// פונקציה לקבלת מארגן לפי ID
+export const getOrganizerById = async (id: string): Promise<any> => {
+    const response = await fetch(`${API_URL}/${id}`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch organizer');
+    }
+    return await response.json();
 };
 
-export const createOrganizer = async (organizer: any) => {
-  try {
-    const response = await axios.post(API_URL, organizer);
-    return response.data; // מחזיר את המארגן שנוצר
-  } catch (error) {
-    console.error('Error creating organizer:', error);
-    return null;
-  }
+// פונקציה להוספת מארגן חדש
+export const addOrganizer = async (organizer: any): Promise<any> => {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(organizer)
+    });
+    if (!response.ok) {
+        throw new Error('Failed to add organizer');
+    }
+    return await response.json();
 };
 
-export const updateOrganizer = async (id: string, organizer: any) => {
-  try {
-    const response = await axios.put(`${API_URL}/${id}`, organizer);
-    return response.data; // מחזיר את המארגן אחרי עדכון
-  } catch (error) {
-    console.error('Error updating organizer:', error);
-    return null;
-  }
+// פונקציה לעדכון מארגן
+export const updateOrganizer = async (id: string, organizer: any): Promise<any> => {
+    const response = await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(organizer)
+    });
+    if (!response.ok) {
+        throw new Error('Failed to update organizer');
+    }
+    return await response.json();
 };
 
-export const deleteOrganizer = async (id: string) => {
-  try {
-    await axios.delete(`${API_URL}/${id}`);
-    return true; // מחזיר true אם המחיקה הצליחה
-  } catch (error) {
-    console.error('Error deleting organizer:', error);
-    return false;
-  }
+// פונקציה למחיקת מארגן
+export const deleteOrganizer = async (id: string): Promise<void> => {
+    const response = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE'
+    });
+    if (!response.ok) {
+        throw new Error('Failed to delete organizer');
+    }
 };
