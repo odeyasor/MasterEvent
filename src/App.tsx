@@ -17,6 +17,6 @@ import Groups from "./components/Groups.tsx"
 export default function App() {
     return <div className="">
         {/* <OrganizerForm onSubmit={undefined}/> */}
-       <Groups/>
+       <OrganizersList/>
     </div>
 } 
