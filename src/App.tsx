@@ -13,10 +13,11 @@ import OrganizerForm from "./components/forms/OrganizerForm.tsx"
 import OrganizersList from "./components/forms/OrganizersList.tsx"
 import GuestsList from "./components/forms/GuestsList.tsx"
 import Groups from "./components/Groups.tsx"
+import AppRoutes from "./routes/AppRoutes.tsx"
 
 export default function App() {
     return <div className="">
         {/* <OrganizerForm onSubmit={undefined}/> */}
-       <OrganizersList/>
+       <AppRoutes/>
     </div>
 } 
