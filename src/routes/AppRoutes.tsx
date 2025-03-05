@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LoginPage from '../pages/Login';
+import LoginPage from '../pages/LoginPage.tsx';
 import RegisterPage from '../pages/RegisterPage';
 import Home from '../pages/Home';
 import AddEvent from '../pages/AddEventPage';
 import Add_guest from '../pages/Add_guest';
-import ProtectedRoute from './ProtectedRoute.tsx.ts';
+import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
 
 const AppRoutes = () => {

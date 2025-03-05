@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { createOrganizer } from "../api/OrginazerRouters.tsx";
 import "../styles/RegisterPage.css"; // ייבוא קובץ העיצוב
+import { organizerApi } from "../API/organizerApi";
 
 const RegisterPage = () => {
   const [organizer, setOrganizer] = useState({ name: "", email: "", password: "" });
@@ -17,7 +17,7 @@ const RegisterPage = () => {
     setError(null);
     setSuccess(false);
 
-    const result = await createOrganizer(organizer);
+    const result = await organizerApi.addOrganizer(organizer);
     if (result) {
       setSuccess(true);
       setTimeout(() => {
