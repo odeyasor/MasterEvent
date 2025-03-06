@@ -49,8 +49,8 @@ export interface GuestInEvent {
     name: string;
     mail: string;
     password: string;
-    events: string[];
-    groups: string[];
+    events?: string[];
+    groups?: string[];
 }
 export interface PhotosFromEvent {
   id: string;

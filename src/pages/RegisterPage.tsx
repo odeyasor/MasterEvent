@@ -1,10 +1,9 @@
-import React from "react";
-import { useState } from "react";
-import "../styles/RegisterPage.css"; // ייבוא קובץ העיצוב
-import { organizerApi } from "../API/organizerApi";
+import React, { useState } from "react";
+import "../styles/RegisterPage.css"; // ודאי שהנתיב תקין
+import { organizerApi } from "../api/organizerApi.ts"; // ודאי שהתיקייה API קיימת ושמות הקבצים תואמים
 
 const RegisterPage = () => {
-  const [organizer, setOrganizer] = useState({ name: "", email: "", password: "" });
+  const [organizer, setOrganizer] = useState({ name: "", mail: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
@@ -17,13 +16,21 @@ const RegisterPage = () => {
     setError(null);
     setSuccess(false);
 
-    const result = await organizerApi.addOrganizer(organizer);
-    if (result) {
-      setSuccess(true);
-      setTimeout(() => {
-        window.location.href = "/dashboard"; // מעבר לדשבורד
-      }, 2000); // מחכה 2 שניות כדי להציג את הודעת ההצלחה
-    } else {
+    try {
+      const result = await organizerApi.addOrganizer({
+        name: organizer.name,
+        mail: organizer.mail,
+        password: organizer.password
+      });
+
+      if (result) {
+        setSuccess(true);
+        setTimeout(() => {
+          window.location.href = "/dashboard"; // מעבר לדשבורד אחרי 2 שניות
+        }, 2000);
+      }
+    } catch (err) {
+      console.error("Error registering organizer:", err);
       setError("הרשמה נכשלה, נסה שוב.");
     }
   };
@@ -48,7 +55,7 @@ const RegisterPage = () => {
             type="email"
             name="email"
             placeholder="אימייל"
-            value={organizer.email}
+            value={organizer.mail}
             onChange={handleChange}
             className="register-input"
             required

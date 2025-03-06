@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage.tsx';
-import RegisterPage from '../pages/RegisterPage';
-import Home from '../pages/Home';
+import RegisterPage from '../pages/RegisterPage.tsx';
+import Home from '../pages/Home.tsx';
 import AddEvent from '../pages/AddEventPage';
 import Add_guest from '../pages/Add_guest';
 import ProtectedRoute from './ProtectedRoute.tsx';
@@ -19,9 +19,7 @@ const AppRoutes = () => {
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/add-event" element={<AddEvent />} />
-          <Route path="/add-guest/:eventId" element={<Add_guest eventId="" />} />
+          <Route path="/Home" element={<Home />} />
         </Route>
         
         {/* Fallback route - redirect to login */}

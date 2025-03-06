@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // ייבוא useNavigate
 import { useEffect, useState } from "react";
-import { getUserEvents } from "../Services/HomeService.tsx";
 import "../styles/DashboardPage.css"; // ייבוא קובץ עיצוב
+import eventService from "../services/eventService.ts";
 
 const DashboardPage = () => {
   const navigate = useNavigate(); // אתחול useNavigate
@@ -15,7 +15,7 @@ const DashboardPage = () => {
     setUserName(storedUser || "אורח");
 
     const fetchEvents = async () => {
-      const userEvents = await getUserEvents();
+      const userEvents = await eventService.getAllEvents();
       if (userEvents.length === 0) {
         setError("אין לך אירועים כרגע.");
       }

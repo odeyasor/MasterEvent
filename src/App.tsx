@@ -1,5 +1,5 @@
 
-
+import { BrowserRouter as Router } from 'react-router-dom';
 import React from "react"
 //import Home from "./pages/Login.tsx"
 import LoginPage from "./pages/LoginPage.tsx"
@@ -14,10 +14,12 @@ import OrganizersList from "./components/forms/OrganizersList.tsx"
 import GuestsList from "./components/forms/GuestsList.tsx"
 import Groups from "./components/Groups.tsx"
 import AppRoutes from "./routes/AppRoutes.tsx"
+import { AuthProvider } from './context/AuthContext.tsx';
 
 export default function App() {
-    return <div className="">
-        {/* <OrganizerForm onSubmit={undefined}/> */}
-       <LoginPage/>
-    </div>
+    return (
+        <AuthProvider> {/* עוטף את כל האפליקציה בקונטקסט */}
+          <AppRoutes />
+        </AuthProvider>
+      );
 } 
