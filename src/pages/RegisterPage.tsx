@@ -53,7 +53,7 @@ const RegisterPage = () => {
           />
           <input
             type="email"
-            name="email"
+            name="mail"
             placeholder="אימייל"
             value={organizer.mail}
             onChange={handleChange}
