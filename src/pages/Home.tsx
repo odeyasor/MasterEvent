@@ -1,13 +1,12 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; // ייבוא useNavigate
-import { useEffect, useState } from "react";
-import "../styles/DashboardPage.css"; // ייבוא קובץ עיצוב
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/DashboardPage.css";
 import eventService from "../services/eventService.ts";
 
 const DashboardPage = () => {
-  const navigate = useNavigate(); // אתחול useNavigate
+  const navigate = useNavigate();
   const [userName, setUserName] = useState<string | null>(null);
-  const [events, setEvents] = useState<any[]>([]); // רשימת אירועים
+  const [events, setEvents] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,8 +24,10 @@ const DashboardPage = () => {
     fetchEvents();
   }, []);
 
+ 
+
   const handleCreateEventClick = () => {
-    navigate("/Add_event"); // ניווט לדף יצירת האירוע
+    navigate("/new-event"); // שינוי לנתיב הנכון
   };
 
   return (

@@ -37,38 +37,47 @@ const LoginPage: React.FC = () => {
         body: JSON.stringify({ mail, pass }),
       });
   
-      // הצגת התשובה הגולמית כדי לראות אם זו תגובה עם טוקן בלבד
-      const textResponse = await response.text();
-      console.log('Raw response:', textResponse);
+      // בדיקה אם השרת מחזיר JSON ולא רק טוקן
+      const data = await response.json();
+      console.log('Server response:', data);
   
-      // אם התשובה מכילה טוקן JWT, ממשיכים
-      if (textResponse && textResponse.length > 0) {
-        const token = textResponse;  // הטוקן החזר ישירות
-        const decoded = decodeToken(token); // פענוח הטוקן
-        console.log('Decoded token:', decoded); // להציג את המידע המפוענח
-  
-        // עדכון הסטטוס ב-AuthContext
-        login(token, decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'], decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
-  
-        console.log('Login successful, navigating to Home...');
-        navigate('/Home');
-      } else {
-        setError('התגובה לא כוללת טוקן');
+      if (!response.ok) {
+        throw new Error(data.message || 'שגיאה בהתחברות');
       }
+  
+      const token = data.token; // לוודא שהשרת מחזיר את הטוקן במפתח 'token'
+      if (!token) {
+        throw new Error('התגובה לא כוללת טוקן');
+      }
+  
+      const decoded = jwtDecode<{ 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string, 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string 
+      }>(token);
+  
+      console.log('Decoded token:', decoded);
+  
+      // בדיקה שהערכים קיימים
+      const userName = decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+      const userId = decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+  
+      if (!userName || !userId) {
+        throw new Error('הטוקן אינו מכיל את הנתונים הדרושים');
+      }
+  
+      // עדכון הסטטוס ב-AuthContext
+      login(token, userName, userId);
+  
+      console.log('Login successful, navigating to Home...');
+      navigate('/Home');
+  
     } catch (err) {
-      setError('שגיאה בקישור לשרת');
+      setError(err instanceof Error ? err.message : 'שגיאה בקישור לשרת');
       console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
   };
-  
-  
-  
-  
-  
-  
-  
 
   const navigateToRegister = () => {
     navigate('/register');
