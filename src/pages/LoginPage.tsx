@@ -63,13 +63,6 @@ const LoginPage: React.FC = () => {
     }
   };
   
-  
-  
-  
-  
-  
-  
-
   const navigateToRegister = () => {
     navigate('/register');
   };

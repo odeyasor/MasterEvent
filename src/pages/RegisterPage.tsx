@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import "../styles/RegisterPage.css"; // ודאי שהנתיב תקין
 import { organizerApi } from "../api/organizerApi.ts"; // ודאי שהתיקייה API קיימת ושמות הקבצים תואמים
+import { useNavigate } from 'react-router-dom';
+import {useAuth} from '../context/AuthContext.tsx';
 
 const RegisterPage = () => {
   const [organizer, setOrganizer] = useState({ name: "", mail: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrganizer({ ...organizer, [e.target.name]: e.target.value });
@@ -26,7 +29,7 @@ const RegisterPage = () => {
       if (result) {
         setSuccess(true);
         setTimeout(() => {
-          window.location.href = "/dashboard"; // מעבר לדשבורד אחרי 2 שניות
+          navigate('/Home');
         }, 2000);
       }
     } catch (err) {
@@ -34,7 +37,9 @@ const RegisterPage = () => {
       setError("הרשמה נכשלה, נסה שוב.");
     }
   };
-
+  const navigateToLogin = () => {
+    navigate('/LoginPage');
+  };
   return (
     <div className="register-container">
       <div className="register-box">
@@ -73,6 +78,9 @@ const RegisterPage = () => {
             הרשמה
           </button>
         </form>
+        <div className="register-link">
+          <p>יש לך חשבון? <span onClick={navigateToLogin}>היכנס כאן</span></p>
+        </div>
       </div>
     </div>
   );
