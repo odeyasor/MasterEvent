@@ -7,6 +7,7 @@ import AddEvent from '../pages/AddEventPage';
 import Add_guest from '../pages/Add_guest';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
+import AddEventPage from '../pages/AddEventPage.tsx';
 
 const AppRoutes = () => {
   return (
@@ -20,6 +21,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/Home" element={<Home />} />
+          <Route path="/AddEventPage" element={<AddEventPage />} /> 
         </Route>
         
         {/* Fallback route - redirect to login */}

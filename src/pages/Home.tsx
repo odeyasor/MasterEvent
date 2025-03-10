@@ -38,7 +38,7 @@ const DashboardPage = () => {
         <button className="dashboard-button" onClick={handleCreateEventClick}>
           ➕ צור אירוע חדש
         </button>
-        <button className="dashboard-button">📅 אירועים קודמים</button>
+        <button className="dashboard-button" onClick={() => navigate('/AddEventPage')}>📅 אירועים קודמים</button>
         <button className="dashboard-button">📜 רשימת אורחים</button>
 
         <h2>האירועים שלך:</h2>

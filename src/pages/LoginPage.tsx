@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/LoginAndRegister.css';
-import {jwtDecode} from 'jwt-decode';
-import {useAuth} from '../context/AuthContext.tsx';
+import '../styles/login-and-register.css';
+import { jwtDecode } from 'jwt-decode';
+import { useAuth } from '../context/AuthContext.tsx';
+import apiClient from '../services/apiClient.ts';
+import axios from 'axios';
 
 const decodeToken = (token: string) => {
   try {
-    const decoded = jwtDecode(token); // פענוח הטוקן
-    console.log('Decoded Token:', decoded); // הצגת המידע מתוך הטוקן
-    return decoded; // החזרת המידע
+    const decoded = jwtDecode(token);
+    console.log('Decoded Token:', decoded);
+    return decoded;
   } catch (e) {
     console.error('Invalid token', e);
     return null;
@@ -29,34 +31,49 @@ const LoginPage: React.FC = () => {
     setLoading(true);
   
     try {
-      const response = await fetch('https://localhost:7112/api/Login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ mail, pass }),
-      });
-  
-      // הצגת התשובה הגולמית כדי לראות אם זו תגובה עם טוקן בלבד
-      const textResponse = await response.text();
-      console.log('Raw response:', textResponse);
-  
-      // אם התשובה מכילה טוקן JWT, ממשיכים
-      if (textResponse && textResponse.length > 0) {
-        const token = textResponse;  // הטוקן החזר ישירות
-        const decoded = decodeToken(token); // פענוח הטוקן
-        console.log('Decoded token:', decoded); // להציג את המידע המפוענח
-  
-        // עדכון הסטטוס ב-AuthContext
-        login(token, decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'], decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']);
-  
-        console.log('Login successful, navigating to Home...');
-        navigate('/Home');
+      const response = await apiClient.post('/Login', { mail, pass });
+      
+      // Get the token from the response
+      const token = response.data;
+      
+      if (token && token.length > 0) {
+        const decoded = decodeToken(token);
+        console.log('Decoded token:', decoded);
+        
+        if (decoded) {
+          // Store the token in localStorage
+          localStorage.setItem('token', token);
+          
+          // Update the auth context
+          login(
+            token, 
+            decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'], 
+            decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
+          );
+          
+          console.log('Login successful, navigating to Home...');
+          navigate('/Home');
+        } else {
+          setError('טוקן לא תקין');
+        }
       } else {
         setError('התגובה לא כוללת טוקן');
       }
     } catch (err) {
-      setError('שגיאה בקישור לשרת');
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          // Server responded with an error status
+          setError(err.response.data?.message || 'שגיאה בהתחברות');
+        } else if (err.request) {
+          // Request was made but no response received
+          setError('לא התקבלה תשובה מהשרת');
+        } else {
+          // Something else caused the error
+          setError('שגיאה בבקשה');
+        }
+      } else {
+        setError('שגיאה בקישור לשרת');
+      }
       console.error('Login error:', err);
     } finally {
       setLoading(false);

@@ -1,6 +1,3 @@
-// Components/AddEvent.tsx
-import { createEvent } from '../api/eventApi.ts';
-import { getGroupByOrginazer } from "../Services/EventService.tsx";
 import React, { useState, useEffect } from 'react';
 import './../styles/Add.css';
 
