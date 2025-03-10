@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
       setLoading(false);
     }
   };
-
+  
   const navigateToRegister = () => {
     navigate('/register');
   };

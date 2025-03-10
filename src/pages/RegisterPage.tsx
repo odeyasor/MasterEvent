@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import "../styles/RegisterPage.css"; // ודאי שהנתיב תקין
-import { organizerApi } from "../api/organizerApi.ts"; // ודאי שהתיקייה API קיימת ושמות הקבצים תואמים
+import "../styles/RegisterPage.css";
+import organizerService from "../services/organizerService.ts";
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
   const [organizer, setOrganizer] = useState({ name: "", mail: "", password: "" });
   const [error, setError] = useState<string | null>(null);
+  const [emailExists, setEmailExists] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOrganizer({ ...organizer, [e.target.name]: e.target.value });
@@ -15,23 +18,31 @@ const RegisterPage = () => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
+    setEmailExists(false);
 
     try {
-      const result = await organizerApi.addOrganizer({
+      await organizerService.createOrganizer({
         name: organizer.name,
         mail: organizer.mail,
         password: organizer.password
       });
 
-      if (result) {
-        setSuccess(true);
-        setTimeout(() => {
-          window.location.href = "/dashboard"; // מעבר לדשבורד אחרי 2 שניות
-        }, 2000);
-      }
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/Home');
+      }, 2000);
     } catch (err) {
       console.error("Error registering organizer:", err);
-      setError("הרשמה נכשלה, נסה שוב.");
+      if (err instanceof Error) {
+        if (err.message === "EMAIL_EXISTS") {
+          setEmailExists(true);
+          setError("האימייל שהוזן כבר קיים. להתחברות לחץ ");
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError("שגיאה לא ידועה.");
+      }
     }
   };
 
@@ -39,8 +50,7 @@ const RegisterPage = () => {
     <div className="register-container">
       <div className="register-box">
         <h2 className="register-title">הרשמה</h2>
-        {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">הרשמה בוצעה בהצלחה! מעביר לדף הראשי...</p>}
+        {success && <div className="success-message">הרשמה בוצעה בהצלחה! מעביר לדף הראשי...</div>}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -69,6 +79,15 @@ const RegisterPage = () => {
             className="register-input"
             required
           />
+                  {error && (
+          <div className="error-message">
+            {error} {emailExists && (
+              <span className="login-link" onClick={() => navigate('/LoginPage')}>
+                 כאן
+              </span>
+            )}
+          </div>
+        )}
           <button type="submit" className="register-button">
             הרשמה
           </button>

@@ -145,10 +145,16 @@
   font-size: 14px;
 }
 
+/* קישור כחול עם קו תחתון */
 .login-link {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
+  color: blue;
+  text-decoration: none; /* מסיר קו תחתון מיותר */
+  cursor: pointer; /* משנה את הסמן ליד הקישור */
+}
+
+/* כשהעכבר עובר מעל הקישור, יופיע קו תחתון */
+.login-link:hover {
+  text-decoration: underline;
 }
 
 .login-link span {
