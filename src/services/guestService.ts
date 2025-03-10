@@ -1,6 +1,6 @@
-import apiClient from './apiClient';
+import apiClient from './apiClient.ts';
 import { AxiosResponse } from 'axios';
-import { Guest, Gender } from '../types/types';
+import { Guest, Gender } from '../types/types.ts';
 // Type for creating a new guest (without id)
 export type GuestCreate = Omit<Guest, 'id'>;
 

@@ -31,6 +31,7 @@ const LoginPage: React.FC = () => {
     setLoading(true);
   
     try {
+<<<<<<< HEAD
       const response = await apiClient.post('/Login', { mail, pass });
       
       // Get the token from the response
@@ -58,8 +59,52 @@ const LoginPage: React.FC = () => {
         }
       } else {
         setError('התגובה לא כוללת טוקן');
+=======
+      const response = await fetch('https://localhost:7112/api/Login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mail, pass }),
+      });
+  
+      // בדיקה אם השרת מחזיר JSON ולא רק טוקן
+      const data = await response.json();
+      console.log('Server response:', data);
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'שגיאה בהתחברות');
+>>>>>>> e17657b0f7f7ebbd42ee9edb396407abb72d8fe0
       }
+  
+      const token = data.token; // לוודא שהשרת מחזיר את הטוקן במפתח 'token'
+      if (!token) {
+        throw new Error('התגובה לא כוללת טוקן');
+      }
+  
+      const decoded = jwtDecode<{ 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string, 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string 
+      }>(token);
+  
+      console.log('Decoded token:', decoded);
+  
+      // בדיקה שהערכים קיימים
+      const userName = decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+      const userId = decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+  
+      if (!userName || !userId) {
+        throw new Error('הטוקן אינו מכיל את הנתונים הדרושים');
+      }
+  
+      // עדכון הסטטוס ב-AuthContext
+      login(token, userName, userId);
+  
+      console.log('Login successful, navigating to Home...');
+      navigate('/Home');
+  
     } catch (err) {
+<<<<<<< HEAD
       if (axios.isAxiosError(err)) {
         if (err.response) {
           // Server responded with an error status
@@ -74,6 +119,9 @@ const LoginPage: React.FC = () => {
       } else {
         setError('שגיאה בקישור לשרת');
       }
+=======
+      setError(err instanceof Error ? err.message : 'שגיאה בקישור לשרת');
+>>>>>>> e17657b0f7f7ebbd42ee9edb396407abb72d8fe0
       console.error('Login error:', err);
     } finally {
       setLoading(false);
