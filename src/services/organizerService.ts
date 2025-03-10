@@ -1,5 +1,5 @@
 import apiClient from './apiClient.ts';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Group, Event, Organizer } from '../types/types.ts';
 
 // Type for creating a new organizer (without id)
@@ -34,11 +34,25 @@ const organizerService = {
   },
 
   // Create new organizer (register)
-  createOrganizer: async (organizer: OrganizerCreate): Promise<Organizer> => {
-    const response: AxiosResponse<Organizer> = await apiClient.post('/Organizer', organizer);
-    return response.data;
-  },
-
+    createOrganizer: async (organizer: OrganizerCreate): Promise<Organizer> => {
+      try {
+        const response: AxiosResponse<Organizer> = await apiClient.post('/Organizer', organizer);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          console.log("Response error data:", error.response); // ✅ נבדוק מה בדיוק חוזר מהשרת
+  
+          const errorMessage = error.response.data?.message || error.response.data || "שגיאה ביצירת משתמש. נסה שוב.";
+  
+          if (typeof errorMessage === "string" && errorMessage.includes("Email already exists")) {
+            throw new Error("EMAIL_EXISTS");
+          }
+  
+          throw new Error(errorMessage);
+        }
+        throw new Error("שגיאת רשת או שהשרת אינו מגיב.");
+      }
+    },
   // Update organizer
   updateOrganizer: async (id: string, organizer: OrganizerUpdate): Promise<Organizer> => {
     const response: AxiosResponse<Organizer> = await apiClient.put(`/Organizer/${id}`, organizer);
