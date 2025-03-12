@@ -9,12 +9,12 @@ import Newguest from '../pages/NewGuestPage.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
 import AddEventPage from '../pages/AddEventPage.tsx';
+import NewEventPage from '../pages/NewEventPage.tsx';
 
 const AppRoutes = () => {
   return (
     <AuthProvider>
       <Routes>
-<<<<<<< HEAD
         {/* Public routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -23,21 +23,21 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
           <Route path="/Home" element={<Home />} />
+          <Route path="/NewEventPage" element={<NewEventPage />} /> 
+          <Route path="/choose-guests" element={<ChooseGuests />} /> 
           <Route path="/AddEventPage" element={<AddEventPage />} /> 
+
         </Route>
-=======
       {/* דף הבית פתוח לכולם */}
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      {/* <Route path="/" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} /> */}
 
       {/* דפים ציבוריים */}
-      <Route path="/home" element={<Home />} />
+      {/* <Route path="/home" element={<Home />} />
      <Route path="/new-event" element={<NewEvent />} />
-     <Route path="/choose-guests" element={<ChooseGuests />} /> 
      <Route path="/new-guests" element={<Newguest />} />
 
->>>>>>> e17657b0f7f7ebbd42ee9edb396407abb72d8fe0
-        
+         */}
         {/* Fallback route - redirect to login */}
         <Route path="*" element={<LoginPage />} />
       </Routes>

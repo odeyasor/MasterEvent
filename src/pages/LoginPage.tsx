@@ -31,97 +31,51 @@ const LoginPage: React.FC = () => {
     setLoading(true);
   
     try {
-<<<<<<< HEAD
       const response = await apiClient.post('/Login', { mail, pass });
-      
-      // Get the token from the response
+
+      // לוודא שהשרת מחזיר את הטוקן במפתח 'token'
       const token = response.data;
-      
-      if (token && token.length > 0) {
-        const decoded = decodeToken(token);
-        console.log('Decoded token:', decoded);
-        
-        if (decoded) {
-          // Store the token in localStorage
-          localStorage.setItem('token', token);
-          
-          // Update the auth context
-          login(
-            token, 
-            decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'], 
-            decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']
-          );
-          
-          console.log('Login successful, navigating to Home...');
-          navigate('/Home');
-        } else {
-          setError('טוקן לא תקין');
-        }
-      } else {
-        setError('התגובה לא כוללת טוקן');
-=======
-      const response = await fetch('https://localhost:7112/api/Login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ mail, pass }),
-      });
-  
-      // בדיקה אם השרת מחזיר JSON ולא רק טוקן
-      const data = await response.json();
-      console.log('Server response:', data);
-  
-      if (!response.ok) {
-        throw new Error(data.message || 'שגיאה בהתחברות');
->>>>>>> e17657b0f7f7ebbd42ee9edb396407abb72d8fe0
-      }
-  
-      const token = data.token; // לוודא שהשרת מחזיר את הטוקן במפתח 'token'
       if (!token) {
         throw new Error('התגובה לא כוללת טוקן');
       }
-  
-      const decoded = jwtDecode<{ 
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string, 
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string 
-      }>(token);
-  
-      console.log('Decoded token:', decoded);
-  
+
+      const decoded = decodeToken(token);
+      if (!decoded) {
+        throw new Error('הטוקן אינו תקין');
+      }
+
       // בדיקה שהערכים קיימים
-      const userName = decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-      const userId = decoded?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-  
+      const userName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+      const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+
       if (!userName || !userId) {
         throw new Error('הטוקן אינו מכיל את הנתונים הדרושים');
       }
-  
+
+      // שמירת הטוקן בלוקאל סטורג'
+      localStorage.setItem('token', token);
+
       // עדכון הסטטוס ב-AuthContext
       login(token, userName, userId);
-  
+
       console.log('Login successful, navigating to Home...');
       navigate('/Home');
   
     } catch (err) {
-<<<<<<< HEAD
       if (axios.isAxiosError(err)) {
         if (err.response) {
-          // Server responded with an error status
           setError(err.response.data?.message || 'שגיאה בהתחברות');
         } else if (err.request) {
-          // Request was made but no response received
           setError('לא התקבלה תשובה מהשרת');
         } else {
-          // Something else caused the error
           setError('שגיאה בבקשה');
         }
+      } else if (err instanceof Error) {
+        setError(err.message);
       } else {
         setError('שגיאה בקישור לשרת');
       }
-=======
-      setError(err instanceof Error ? err.message : 'שגיאה בקישור לשרת');
->>>>>>> e17657b0f7f7ebbd42ee9edb396407abb72d8fe0
+
       console.error('Login error:', err);
     } finally {
       setLoading(false);
