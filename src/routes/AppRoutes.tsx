@@ -10,6 +10,7 @@ import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
 import AddEventPage from '../pages/AddEventPage.tsx';
 import NewEventPage from '../pages/NewEventPage.tsx';
+import OrganizerEvents from '../pages/OrganizerEvents.tsx';
 
 const AppRoutes = () => {
   return (
@@ -26,7 +27,9 @@ const AppRoutes = () => {
           <Route path="/NewEventPage" element={<NewEventPage />} /> 
           <Route path="/choose-guests" element={<ChooseGuests />} /> 
           <Route path="/AddEventPage" element={<AddEventPage />} /> 
+          <Route path="/OrganizerEvents" element={<OrganizerEvents />} /> 
 
+          
         </Route>
       {/* דף הבית פתוח לכולם */}
       {/* <Route path="/" element={<LoginPage />} />

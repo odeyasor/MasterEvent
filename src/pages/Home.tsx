@@ -39,22 +39,8 @@ const DashboardPage = () => {
         <button className="dashboard-button" onClick={() => navigate('/NewEventPage')}>
           ➕ צור אירוע חדש
         </button>
-        <button className="dashboard-button" onClick={() => navigate('/AddEventPage')}>📅 אירועים קודמים</button>
+        <button className="dashboard-button" onClick={() => navigate('/OrganizerEvents')}>📅 אירועים קודמים</button>
         <button className="dashboard-button">📜 רשימת אורחים</button>
-
-        <h2>האירועים שלך:</h2>
-        {error && <p className="error-message">{error}</p>}
-        {events.length > 0 ? (
-          <ul className="event-list">
-            {events.map((event, index) => (
-              <li key={index} className="event-item">
-                {event.name}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-events-message">אין לך אירועים כרגע.</p>
-        )}
       </main>
     </div>
   );

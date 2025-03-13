@@ -1,6 +1,6 @@
 import apiClient from './apiClient.ts';
 import { AxiosResponse } from 'axios';
-import { Event } from '../types/types';
+import { Event, SubGuest } from '../types/types';
 // Type for creating a new event (without id)
 export type EventCreate = Omit<Event, 'id'>;
 
@@ -28,6 +28,8 @@ const eventService = {
 
   // Update event
   updateEvent: async (id: string, event: EventUpdate): Promise<Event> => {
+    console.log("🔄 Updating event:", id, event);
+
     const response: AxiosResponse<Event> = await apiClient.put(`/Event/${id}`, event);
     return response.data;
   },
@@ -40,9 +42,13 @@ const eventService = {
   // Get events by organizer id
   getEventsByOrganizerId: async (organizerId: string): Promise<Event[]> => {
     const response: AxiosResponse<Event[]> = await apiClient.get(`/Event/organizer/${organizerId}`);
+    console.log("Response from API:", response.data);  // לבדוק מה מגיע
     return response.data;
   },
-
+  GetGuestsByEventId: async (eventId: number): Promise<SubGuest[]> => {
+    const response:AxiosResponse<SubGuest[]> = await apiClient.get(`/Event/guests/${eventId}`);
+    return response.data;
+  },
   // Get events by date range
   getEventsByDateRange: async (startDate: string, endDate: string): Promise<Event[]> => {
     const response: AxiosResponse<Event[]> = await apiClient.get('/Event/daterange', {

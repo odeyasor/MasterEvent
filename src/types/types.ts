@@ -1,5 +1,5 @@
 export interface Event {
-  id: string;
+  id: number;
   organizerId: string;
   organizer: Organizer;  
   eventName: string;
@@ -8,8 +8,8 @@ export interface Event {
   details: string;
   seperation: boolean;
   invitation: string;
-  photos: PhotosFromEvent[];  
-  guests: GuestInEvent[];  
+  photos?: PhotosFromEvent[];  
+  guests?: GuestInEvent[];  
 }
 
 export interface Group {
