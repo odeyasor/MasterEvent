@@ -22,7 +22,7 @@ const ChooseGuestsPage = () => {
           setLoading(false);
           return;
         }
-        const data = await groupService.getGroupsByOrganizerId(storedUser);
+        const data = await groupService.getAllGroups();
         setGroups(data);
       } catch (err) {
         setError("Failed to fetch groups");
@@ -46,7 +46,7 @@ const ChooseGuestsPage = () => {
         <ul>
           {groups.map((group) => (
             <li key={group.id}>
-              {group.name} - Guest: {group.guest?.name || "No guest"}
+              {group.name} - Guest: {group.name || "No guest"}
             </li>
           ))}
         </ul>

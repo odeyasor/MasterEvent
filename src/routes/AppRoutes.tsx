@@ -5,6 +5,7 @@ import RegisterPage from '../pages/RegisterPage.tsx';
 import Home from '../pages/Home.tsx';
 import NewEvent from '../pages/NewEventPage.tsx';
 import ChooseGuests from "../pages/ChooseGuetsPage.tsx"
+import OrganizerGroups from "../pages/OrganizerGroupsPage.tsx"
 import Newguest from '../pages/NewGuestPage.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
@@ -39,6 +40,7 @@ const AppRoutes = () => {
       {/* <Route path="/home" element={<Home />} />
      <Route path="/new-event" element={<NewEvent />} />
      <Route path="/new-guests" element={<Newguest />} />
+     <Route path="/organizer-groups" element={<OrganizerGroups  />} />
 
          */}
         {/* Fallback route - redirect to login */}

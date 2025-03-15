@@ -1,30 +1,59 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/NewEvent.css";
+import eventService from "../services/eventService.ts"
+import organizerService from "../services/organizerService.ts"
+import { useAuth } from "../context/AuthContext.tsx"
+
 
 const NewEvent: React.FC = () => {
+  const { userId } = useAuth();
   const [eventName, setEventName] = useState("");
-  const [date, setDate] = useState("");
+  const [eventDate, setDate] = useState("");
   const [address, setAddress] = useState("");
   const [details, setDetails] = useState("");
   const [separation, setSeparation] = useState(false);
   const [image, setImage] = useState<File | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const eventData = {
-      eventName,
-      date,
-      address,
-      details,
-      separation,
-      image,
-    };
-    console.log("אירוע חדש נוצר:", eventData);
-    alert("האירוע נוצר בהצלחה!");
-  };
 
+    if (!userId) {
+      alert("שגיאה: המשתמש אינו מחובר.");
+      return;
+    }
+
+    try {
+      const organizer = await organizerService.getOrganizer(userId);
+      
+      if (!organizer) {
+        alert("שגיאה: לא נמצא מארגן.");
+        return;
+      }
+
+      const eventData = {
+        organizerId: organizer.id, 
+        eventName,
+        eventDate,
+        address,
+        details,
+        seperation: separation, // ודא שזה השם הנכון בטיפוס
+        invitation: "", // ערך ברירת מחדל
+        photos: [], // רשימת תמונות ריקה
+        guests: [], // רשימת אורחים ריקה
+      };
+
+      await eventService.createEvent(eventData);
+      alert("האירוע נוצר בהצלחה!");
+      
+    } catch (error) {
+      console.log("אירוע חדש לא נוצר:", error);
+      alert("הייתה שגיאה ביצירת האירוע. אנא נסה שוב.");
+    }
+};
+
+  
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
@@ -46,7 +75,7 @@ const NewEvent: React.FC = () => {
         <label>תאריך:</label>
         <input
           type="date"
-          value={date}
+          value={eventDate}
           onChange={(e) => setDate(e.target.value)}
           required
         />

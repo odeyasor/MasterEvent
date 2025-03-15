@@ -25,7 +25,6 @@ const guestService = {
     const response: AxiosResponse<Guest> = await apiClient.post('/Guest', guest);
     return response.data;
   },
-
   // Update guest
   updateGuest: async (id: string, guest: GuestUpdate): Promise<Guest> => {
     const response: AxiosResponse<Guest> = await apiClient.put(`/Guest/${id}`, guest);
@@ -46,8 +45,8 @@ const guestService = {
   },
 
   // Get guests by email
-  getGuestsByMail: async (mail: string): Promise<Guest[]> => {
-    const response: AxiosResponse<Guest[]> = await apiClient.get('/Guest/mail', {
+  getGuestsByMail: async (mail: string): Promise<number> => {
+    const response: AxiosResponse<number> = await apiClient.get('/Guest/mail', {
       params: { mail }
     });
     return response.data;

@@ -1,7 +1,6 @@
 export interface Event {
   id: number;
   organizerId: string;
-  organizer: Organizer;  
   eventName: string;
   eventDate: string;  
   address: string;
@@ -16,14 +15,12 @@ export interface Group {
   id: string;
   name: string;
   organizerId: string;
-  organizer: Organizer; 
   guestId: string;
-  guest: Guest; 
 }
 // Enum ל-Gender
 export enum Gender {
-  female = "female",
-  male = "male"
+  female = 1,
+  male = 0
 }
 
 // טיפוס עבור Guest

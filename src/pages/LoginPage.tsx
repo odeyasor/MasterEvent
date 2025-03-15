@@ -31,6 +31,7 @@ const LoginPage: React.FC = () => {
     setLoading(true);
   
     try {
+<<<<<<< HEAD
       const response = await apiClient.post('/Login', { mail, pass });
 
       // לוודא שהשרת מחזיר את הטוקן במפתח 'token'
@@ -44,6 +45,44 @@ const LoginPage: React.FC = () => {
         throw new Error('הטוקן אינו תקין');
       }
 
+=======
+      const response = await fetch('https://localhost:7112/api/Login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mail, pass }),
+      });
+  
+      // אם התגובה אינה JSON (כמו במקרה של טוקן גולמי)
+      const textResponse = await response.text();
+      console.log('Server raw response:', textResponse);
+  
+      let data;
+      let token;
+  
+      try {
+        // ננסה לפרסר את התגובה כ-JSON
+        data = JSON.parse(textResponse);
+        token = data.token;
+      } catch (err) {
+        // אם זה לא JSON, אז כנראה שזה טוקן גולמי
+        token = textResponse;
+      }
+  
+      if (!token) {
+        throw new Error('התגובה לא כוללת טוקן');
+      }
+  
+      // פענוח הטוקן
+      const decoded = jwtDecode<{ 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string, 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string 
+      }>(token);
+  
+      console.log('Decoded token:', decoded);
+  
+>>>>>>> 79b2972 (15/03)
       // בדיקה שהערכים קיימים
       const userName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
       const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
@@ -81,6 +120,7 @@ const LoginPage: React.FC = () => {
       setLoading(false);
     }
   };
+  
   
   const navigateToRegister = () => {
     navigate('/register');
