@@ -1,49 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { Group } from '../types/types.ts'; 
-import groupService from '../services/groupService.ts'; 
-import { useAuth } from "../context/AuthContext.tsx"
+import React, { useEffect, useState } from "react";
+import { Group } from "../types/types.ts";
+import groupService from "../services/groupService.ts";
+import { useAuth } from "../context/AuthContext.tsx";
+import { useNavigate } from "react-router-dom";
+import GuestsList from "../components/GuestsItem.tsx";
 
 const OrganizerGroupsPage: React.FC = () => {
   const { userId } = useAuth();
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGroups = async () => {
       try {
         if (!userId) {
-            console.error("User ID is null or undefined!");
-            return; // או לבצע פעולת fallback אחרת
-          }
-          
-          const id = userId; 
-     const groupsData = await groupService.getAllGroups();
+          console.error("User ID is null or undefined!");
+          return;
+        }
+
+        const groupsData = await groupService.getGroupsByOrganizerId(userId);
         setGroups(groupsData);
       } catch (error) {
-        console.error('Error fetching groups:', error);
+        console.error("Error fetching groups:", error);
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchGroups();
-  }, []);
-
-  const handleAddGroup = () => {
-    // כאן תוכל להוסיף את הפונקציה להוספת קבוצה חדשה
-    console.log('Add new group');
-  };
-
-  const handleViewGuests = async (groupId: string) => {
-    const group = await groupService.getGroup(groupId);
-    // כאן תוכל להציג את האורחים, לדוגמה בחלון פופ-אפ או על ידי שינוי מצב נוסף
-    return group.guest.name;
-  };
+  }, [userId]);
 
   return (
     <div className="organizer-groups-page">
-      <h1>קבוצות האורחים של המארגן</h1>
-      
+      <h1>הקבוצות שלי</h1>
+
+      <button onClick={() => navigate("/add-group")}>הוסף קבוצה חדשה</button>
+
       {loading ? (
         <p>טוען קבוצות...</p>
       ) : (
@@ -51,14 +45,20 @@ const OrganizerGroupsPage: React.FC = () => {
           {groups.map((group) => (
             <div key={group.id} className="group-card">
               <h2>{group.name}</h2>
-              <p>מספר אורחים: {}</p>
-              <button onClick={() => handleViewGuests(group.guest.name)}>הצג אורחים</button>
+              <button onClick={() => setSelectedGroupId(group.id)}>
+                הצג אורחים
+              </button>
             </div>
           ))}
         </div>
       )}
-      
-      <button className="add-group-btn" onClick={handleAddGroup}>הוסף קבוצה חדשה</button>
+
+      {selectedGroupId !== null && (
+        <GuestsList
+          groupId={selectedGroupId}
+          onClose={() => setSelectedGroupId(null)}
+        />
+      )}
     </div>
   );
 };

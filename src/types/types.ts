@@ -15,7 +15,6 @@ export interface Group {
   id: string;
   name: string;
   organizerId: string;
-  guestId: string;
 }
 // Enum ל-Gender
 export enum Gender {
@@ -35,10 +34,10 @@ export interface GuestInEvent {
   guestId: string;
   guest: Guest;  
   eventId: string;
-  event_: Event;
+  // event_: Event;
   ok: boolean;
   group: string;
-  group_: Group; 
+  // group_: Group; 
 }
 
   export interface Organizer {
