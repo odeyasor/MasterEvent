@@ -1,5 +1,5 @@
 // Export all services from a single file for easy imports
-import apiClient from './apiClient';
+import apiClient from '../api/apiClient.ts';
 import eventService from './eventService';
 import groupService from './groupService';
 import guestService from './guestService';

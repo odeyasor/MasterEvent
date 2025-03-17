@@ -1,4 +1,4 @@
-import apiClient from './apiClient.ts';
+import apiClient from '../api/apiClient.ts';
 import axios, { AxiosResponse } from 'axios';
 import { Group, Event, Organizer } from '../types/types.ts';
 

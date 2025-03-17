@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/login-and-register.css';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../context/AuthContext.tsx';
-import apiClient from '../services/apiClient.ts';
+import apiClient from "../api/apiClient.ts";
 import axios from 'axios';
 
 const decodeToken = (token: string) => {
@@ -31,21 +31,7 @@ const LoginPage: React.FC = () => {
     setLoading(true);
   
     try {
-<<<<<<< HEAD
-      const response = await apiClient.post('/Login', { mail, pass });
 
-      // לוודא שהשרת מחזיר את הטוקן במפתח 'token'
-      const token = response.data;
-      if (!token) {
-        throw new Error('התגובה לא כוללת טוקן');
-      }
-
-      const decoded = decodeToken(token);
-      if (!decoded) {
-        throw new Error('הטוקן אינו תקין');
-      }
-
-=======
       const response = await fetch('https://localhost:7112/api/Login', {
         method: 'POST',
         headers: {
@@ -82,7 +68,6 @@ const LoginPage: React.FC = () => {
   
       console.log('Decoded token:', decoded);
   
->>>>>>> 79b2972 (15/03)
       // בדיקה שהערכים קיימים
       const userName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
       const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];

@@ -1,4 +1,4 @@
-import apiClient from './apiClient.ts';
+import apiClient from '../api/apiClient.ts';
 import { AxiosResponse } from 'axios';
 import { Event, SubGuest } from '../types/types';
 // Type for creating a new event (without id)

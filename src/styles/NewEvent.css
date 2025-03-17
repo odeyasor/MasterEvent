@@ -1,58 +1,112 @@
+/* עיצוב כללי לדף */
+body {
+  background: linear-gradient(to bottom right, #ff7eb3, #ffbf47, #00c6ff);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+}
+
+/* עיצוב הקונטיינר הראשי של האירוע */
 .event-container {
-    background: linear-gradient(to right, #0057b7, #ffd700);
-    color: #fff;
-    max-width: 500px;
-    margin: auto;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
+  background: linear-gradient(135deg, #0057b7, #ffd700);
+  color: #fff;
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.event-container:hover {
+  transform: scale(1.02);
+}
+
+/* כותרת */
+h2 {
+  margin-bottom: 20px;
+  font-size: 2em;
+  text-shadow: 2px 2px 6px rgba(202, 82, 82, 0.3);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* עיצוב טפסים */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* תוויות */
+label {
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: right;
+  font-size: 1.1em;
+}
+
+/* שדות קלט */
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1em;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* תיבת סימון */
+input[type="checkbox"] {
+  width: auto;
+  margin-left: 5px;
+}
+
+/* עיצוב כפתורים */
+button {
+  background: linear-gradient(90deg, #ffd700, #ff9d00);
+  color: #fff;
+  font-size: 1.2em;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+  background: linear-gradient(90deg, #ffcc00, #ff7500);
+  transform: scale(1.05);
+}
+
+/* עיצוב משתתפים */
+.participants-container {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* אפקטים נוספים */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-10px);
   }
-  
-  h2 {
-    margin-bottom: 20px;
-    font-size: 1.8em;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+  to {
+      opacity: 1;
+      transform: translateY(0);
   }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    margin-top: 10px;
-    font-weight: bold;
-    text-align: right;
-  }
-  
-  input, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 6px;
-    border: none;
-    font-size: 1em;
-  }
-  
-  input[type="checkbox"] {
-    width: auto;
-    margin-left: 5px;
-  }
-  
-  button {
-    background: #ffd700;
-    color: #0057b7;
-    font-size: 1.2em;
-    padding: 10px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  button:hover {
-    background: #ffcc00;
-  }
-  
+}

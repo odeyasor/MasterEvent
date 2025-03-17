@@ -9,10 +9,10 @@ import OrganizerGroups from "../pages/OrganizerGroupsPage.tsx"
 import Newguest from '../pages/NewGuestPage.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
-import AddEventPage from '../pages/AddEventPage.tsx';
 import NewEventPage from '../pages/NewEventPage.tsx';
-import OrganizerEvents from '../pages/OrganizerEvents.tsx';
-
+import OKPage from '../pages/OKPage.tsx';
+import MyEventsPage from "../pages/MyEventsPage.tsx"
+import EditEventPage from "../pages/EditEventPage.tsx"
 const AppRoutes = () => {
   return (
     <AuthProvider>
@@ -23,26 +23,16 @@ const AppRoutes = () => {
         
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Home />} />
+        <Route path='/' element={<OKPage />}/>
+          {/*<Route path="/" element={<Home />} />*/}
           <Route path="/Home" element={<Home />} />
           <Route path="/NewEventPage" element={<NewEventPage />} /> 
           <Route path="/choose-guests" element={<ChooseGuests />} /> 
-          <Route path="/AddEventPage" element={<AddEventPage />} /> 
-          <Route path="/OrganizerEvents" element={<OrganizerEvents />} /> 
-
+          <Route path="/myEvent" element={<MyEventsPage />} /> 
+          <Route path="/edit-event/:eventId" element={<EditEventPage />} />
           
         </Route>
-      {/* דף הבית פתוח לכולם */}
-      {/* <Route path="/" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} /> */}
-
-      {/* דפים ציבוריים */}
-      {/* <Route path="/home" element={<Home />} />
-     <Route path="/new-event" element={<NewEvent />} />
-     <Route path="/new-guests" element={<Newguest />} />
-     <Route path="/organizer-groups" element={<OrganizerGroups  />} />
-
-         */}
+  
         {/* Fallback route - redirect to login */}
         <Route path="*" element={<LoginPage />} />
       </Routes>

@@ -5,7 +5,6 @@ import eventService from "../services/eventService.ts"
 import organizerService from "../services/organizerService.ts"
 import { useAuth } from "../context/AuthContext.tsx"
 
-
 const NewEvent: React.FC = () => {
   const { userId } = useAuth();
   const [eventName, setEventName] = useState("");
@@ -45,15 +44,14 @@ const NewEvent: React.FC = () => {
       };
 
       await eventService.createEvent(eventData);
-      alert("האירוע נוצר בהצלחה!");
+      navigate("/Home"); // ✅ הפניה לדף הבית במקום כפתור "הוסף אורחים"
       
     } catch (error) {
       console.log("אירוע חדש לא נוצר:", error);
       alert("הייתה שגיאה ביצירת האירוע. אנא נסה שוב.");
     }
-};
+  };
 
-  
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
@@ -111,8 +109,6 @@ const NewEvent: React.FC = () => {
 
         <button type="submit">צור אירוע</button>
       </form>
-      
-      <button onClick={() => navigate("/choose-guests")}>הוסף אורחים</button>
     </div>
   );
 };

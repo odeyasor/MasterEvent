@@ -33,12 +33,9 @@ export interface Guest {
 export interface GuestInEvent {
   id: string;
   guestId: string;
-  guest: Guest;  
   eventId: string;
-  event_: Event;
   ok: boolean;
   group: string;
-  group_: Group; 
 }
 
   export interface Organizer {
@@ -52,9 +49,7 @@ export interface GuestInEvent {
 export interface PhotosFromEvent {
   id: string;
   guestId: string;
-  guest: Guest; 
   eventId: string;
-  event_: Event;  
   imageUrl: string;
   blessing: string;
 }
@@ -62,16 +57,13 @@ export interface PhotosFromEvent {
 export interface Seating {
   id: string;
   eventId: string;
-  event_: Event;  
   subGuestId: string;
-  subGuest: SubGuest;  
   table: number;
   seat: number;
 } 
 export interface SubGuest {
   id: string;
   guestId: string;
-  guest: Guest; 
   name: string;
   gender: Gender;  
 }

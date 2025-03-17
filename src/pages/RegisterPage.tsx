@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/login-and-register.css";
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../services/apiClient.ts';
+import apiClient from '../api/apiClient.ts';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../context/AuthContext.tsx';

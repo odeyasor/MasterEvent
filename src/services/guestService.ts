@@ -1,4 +1,4 @@
-import apiClient from './apiClient.ts';
+import apiClient from '../api/apiClient.ts';
 import { AxiosResponse } from 'axios';
 import { Guest, Gender } from '../types/types.ts';
 // Type for creating a new guest (without id)

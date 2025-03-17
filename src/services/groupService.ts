@@ -1,4 +1,4 @@
-import apiClient from './apiClient.ts';
+import apiClient from '../api/apiClient.ts';
 import { AxiosResponse } from 'axios';
 import { Group } from '../types/types';
 

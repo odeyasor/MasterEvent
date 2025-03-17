@@ -39,12 +39,9 @@ const DashboardPage = () => {
         <button className="dashboard-button" onClick={() => navigate('/NewEventPage')}>
           ➕ צור אירוע חדש
         </button>
-<<<<<<< HEAD
-        <button className="dashboard-button" onClick={() => navigate('/OrganizerEvents')}>📅 אירועים קודמים</button>
-        <button className="dashboard-button">📜 רשימת אורחים</button>
-=======
-        <button className="dashboard-button">📅 אירועים קודמים</button>
-        <button className="dashboard-button" onClick={()=>navigate("/organizer-groups") }>📜 רשימת אורחים</button>
+
+        <button className="dashboard-button" onClick={()=>navigate("/myEvent") }>📅 אירועים קודמים</button>
+        <button className="dashboard-button" >📜 רשימת אורחים</button>
 
         <h2>האירועים שלך:</h2>
         {error && <p className="error-message">{error}</p>}
@@ -59,7 +56,6 @@ const DashboardPage = () => {
         ) : (
           <p className="no-events-message">אין לך אירועים כרגע.</p>
         )}
->>>>>>> 79b2972 (15/03)
       </main>
     </div>
   );
