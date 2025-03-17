@@ -26,9 +26,7 @@ const DashboardPage = () => {
 
  
 
-  const handleCreateEventClick = () => {
-    navigate("/new-event"); // שינוי לנתיב הנכון
-  };
+  
 
   return (
     <div className="dashboard-container">
@@ -56,6 +54,7 @@ const DashboardPage = () => {
         ) : (
           <p className="no-events-message">אין לך אירועים כרגע.</p>
         )}
+
       </main>
     </div>
   );

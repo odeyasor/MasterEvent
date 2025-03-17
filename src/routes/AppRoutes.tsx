@@ -4,7 +4,7 @@ import LoginPage from '../pages/LoginPage.tsx';
 import RegisterPage from '../pages/RegisterPage.tsx';
 import Home from '../pages/Home.tsx';
 import NewEvent from '../pages/NewEventPage.tsx';
-import ChooseGuests from "../pages/ChooseGuetsPage.tsx"
+import ChooseGuestsPage from "../pages/ChooseGuetsPage.tsx"
 import OrganizerGroups from "../pages/OrganizerGroupsPage.tsx"
 import Newguest from '../pages/NewGuestPage.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
@@ -13,6 +13,8 @@ import NewEventPage from '../pages/NewEventPage.tsx';
 import OKPage from '../pages/OKPage.tsx';
 import MyEventsPage from "../pages/MyEventsPage.tsx"
 import EditEventPage from "../pages/EditEventPage.tsx"
+import NewGroupPage from '../pages/NewGroupPage.tsx';
+
 const AppRoutes = () => {
   return (
     <AuthProvider>
@@ -27,9 +29,11 @@ const AppRoutes = () => {
           {/*<Route path="/" element={<Home />} />*/}
           <Route path="/Home" element={<Home />} />
           <Route path="/NewEventPage" element={<NewEventPage />} /> 
-          <Route path="/choose-guests" element={<ChooseGuests />} /> 
+          <Route path="/choose-guests" element={<ChooseGuestsPage />} /> 
           <Route path="/myEvent" element={<MyEventsPage />} /> 
           <Route path="/edit-event/:eventId" element={<EditEventPage />} />
+          <Route path="/add-group" element={<NewGroupPage />} />
+
           
         </Route>
   

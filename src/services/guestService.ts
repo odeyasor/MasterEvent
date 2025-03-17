@@ -36,6 +36,18 @@ const guestService = {
     await apiClient.delete(`/guests/${id}`);
   },
 
+  GetGuestsByGroup: async (groupId: number): Promise<Guest[]> => {
+    const response:AxiosResponse<Guest[]> = await apiClient.get(`/Guest/group/${groupId}`, {
+      params: {groupId}
+    })
+    return response.data;
+  },
+  GetGuestsByEvent: async (eventId: number): Promise<Guest[]> => {
+    const response:AxiosResponse<Guest[]> = await apiClient.get(`/Guest/event/${eventId}`, {
+      params: {eventId}
+    })
+    return response.data;
+  },
   // Get guests by name
   getGuestsByName: async (name: string): Promise<Guest[]> => {
     const response: AxiosResponse<Guest[]> = await apiClient.get('/Guest/name', {
@@ -43,6 +55,7 @@ const guestService = {
     });
     return response.data;
   },
+
 
   // Get guests by email
   getGuestsByMail: async (mail: string): Promise<number> => {

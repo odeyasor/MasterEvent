@@ -43,7 +43,7 @@ const groupService = {
     const response: AxiosResponse<Group[]> = await apiClient.get(`/Group/organizer/${organizerId}`);
     return response.data;
   },
-
+ 
   // Get groups by name
   getGroupsByName: async (name: string): Promise<Group[]> => {
     const response: AxiosResponse<Group[]> = await apiClient.get('/Group/name', {

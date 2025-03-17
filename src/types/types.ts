@@ -15,7 +15,6 @@ export interface Group {
   id: string;
   name: string;
   organizerId: string;
-  guestId: string;
 }
 // Enum ל-Gender
 export enum Gender {

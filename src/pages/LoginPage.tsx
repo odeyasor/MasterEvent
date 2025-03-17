@@ -68,6 +68,7 @@ const LoginPage: React.FC = () => {
   
       console.log('Decoded token:', decoded);
   
+
       // בדיקה שהערכים קיימים
       const userName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
       const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];

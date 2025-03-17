@@ -14,7 +14,7 @@ const ChooseGuestsPage = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*useEffect(() => {
     const storedUser = localStorage.getItem("userId");
     const fetchGroups = async () => {
       try {
@@ -26,7 +26,7 @@ const ChooseGuestsPage = () => {
         const data = await groupService.getAllGroups();
         setGroups(data);
         
-        const guestData: { [key: string]: Guest } = {};
+       /const guestData: { [key: string]: Guest } = {};
         for (const group of data) {
           if (group.guestId) {
             guestData[group.guestId] = await guestService.getGuest(group.guestId);
@@ -87,7 +87,7 @@ const ChooseGuestsPage = () => {
       <button onClick={confirmGuests}>Confirm Selected Guests</button>
       <button onClick={() => navigate("/new-guests")}>Add New Guest</button>
     </div>
-  );
+  );*/
 };
 
 export default ChooseGuestsPage;
