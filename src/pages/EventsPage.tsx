@@ -52,7 +52,7 @@ const EventsPage = () => {
             <div className="event-actions">
               <button
                 className="update-btn"
-                onClick={() => navigate(`/edit-event/${event.id}`)}
+                onClick={() => navigate(`/event-details/${event.id}`)}
               >
                 🔍 פרטים
               </button>
