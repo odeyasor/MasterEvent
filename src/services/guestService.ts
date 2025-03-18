@@ -36,6 +36,11 @@ const guestService = {
     await apiClient.delete(`/guests/${id}`);
   },
 
+  SendEmails: async (eventId: number, subject: string, body: string): Promise<void> => {
+    await apiClient.post(`/Guest/sendemails?eventId=${eventId}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+},
+
+
   GetGuestsByGroup: async (groupId: number): Promise<Guest[]> => {
     const response:AxiosResponse<Guest[]> = await apiClient.get(`/Guest/group/${groupId}`, {
       params: {groupId}

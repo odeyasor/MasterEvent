@@ -34,7 +34,7 @@ const DashboardPage = () => {
         <h1>שלום, {userName}!</h1>
       </header>
       <main className="dashboard-content">
-        <button className="dashboard-button" onClick={() => navigate('/NewEventPage')}>
+        <button className="dashboard-button" onClick={() => navigate('/new-event')}>
           ➕ צור אירוע חדש
         </button>
 

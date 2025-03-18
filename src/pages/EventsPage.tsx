@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import eventService from "../services/eventService.ts";
 import "../styles/NewEvent.css"; // נשתמש ב-CSS מותאם
 
-const MyEventsPage = () => {
+const EventsPage = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -44,11 +44,25 @@ const MyEventsPage = () => {
         {events.map((event) => (
           <div key={event.id} className="event-card">
             <h3>{event.eventName}</h3>
-            <p>📅 {event.eventDate}</p>
+            <p>📅 {new Date(event.eventDate).toLocaleDateString()}</p>
+            <p>⏰ {new Date(event.eventDate).toLocaleTimeString()}</p>
             <p>📍 {event.address}</p>
-            <button onClick={() => navigate(`/edit-event/${event.id}`)}>
-              ✏️ ערוך אירוע
-            </button>
+            <p>{event.seperation}</p>
+            <p>{event.details}</p>
+            <div className="event-actions">
+              <button
+                className="update-btn"
+                onClick={() => navigate(`/edit-event/${event.id}`)}
+              >
+                🔍 פרטים
+              </button>
+              <button
+                className="delete-btn"
+                onClick={() => navigate(`/edit-event/${event.id}`)}
+              >
+                ✏️ עריכה
+              </button>
+              </div>
           </div>
         ))}
       </div>
@@ -56,4 +70,4 @@ const MyEventsPage = () => {
   );
 };
 
-export default MyEventsPage;
+export default EventsPage;

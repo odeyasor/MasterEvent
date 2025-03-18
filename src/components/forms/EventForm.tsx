@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/NewEvent.css";
-import eventService from "../services/eventService.ts"
-import organizerService from "../services/organizerService.ts"
-import { useAuth } from "../context/AuthContext.tsx"
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import eventService from "../../services/eventService.ts";
+import organizerService from "../../services/organizerService.ts";
+import { useAuth } from "../../context/AuthContext.tsx";
+import "../../styles/NewEvent.css";
 
 const NewEvent: React.FC = () => {
   const { userId } = useAuth();
@@ -13,7 +13,29 @@ const NewEvent: React.FC = () => {
   const [details, setDetails] = useState("");
   const [separation, setSeparation] = useState(false);
   const [image, setImage] = useState<File | null>(null);
+  const [isEdit, setIsEdit] = useState(false); // מצב אם אנחנו בעריכה
+  const { eventId } = useParams(); // מזהה האירוע מה-URL
   const navigate = useNavigate();
+
+  // אם אנחנו בעמוד עריכת אירוע, נטען את פרטי האירוע
+  useEffect(() => {
+    if (eventId) {
+      setIsEdit(true); // אם יש eventId, אנחנו בעורך
+      const fetchEventData = async () => {
+        try {
+          const event = await eventService.getEvent(eventId); // יש להוסיף פונקציה כזו בשירות
+          setEventName(event.eventName);
+          setDate(event.eventDate);
+          setAddress(event.address);
+          setDetails(event.details);
+          setSeparation(event.seperation);
+        } catch (error) {
+          console.log("לא ניתן לטעון את פרטי האירוע:", error);
+        }
+      };
+      fetchEventData();
+    }
+  }, [eventId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,30 +47,34 @@ const NewEvent: React.FC = () => {
 
     try {
       const organizer = await organizerService.getOrganizer(userId);
-      
+
       if (!organizer) {
         alert("שגיאה: לא נמצא מארגן.");
         return;
       }
 
       const eventData = {
-        organizerId: organizer.id, 
+        organizerId: organizer.id,
         eventName,
         eventDate,
         address,
         details,
-        seperation: separation, // ודא שזה השם הנכון בטיפוס
-        invitation: "", // ערך ברירת מחדל
-        photos: [], // רשימת תמונות ריקה
-        guests: [], // רשימת אורחים ריקה
+        seperation: separation,
+        invitation: "",
+        photos: image ? [image] : [],
+        guests: [],
       };
 
-      await eventService.createEvent(eventData);
-      navigate("/Home"); // ✅ הפניה לדף הבית במקום כפתור "הוסף אורחים"
-      
+      if (isEdit && eventId) {
+        await eventService.updateEvent(eventId, eventData); // עדכון אירוע קיים
+        navigate(`/event-details/${eventId}`); // הפניה לדף פרטי האירוע
+      } else {
+        await eventService.createEvent(eventData); // יצירת אירוע חדש
+        navigate("/Home"); // הפניה לדף הבית
+      }
     } catch (error) {
-      console.log("אירוע חדש לא נוצר:", error);
-      alert("הייתה שגיאה ביצירת האירוע. אנא נסה שוב.");
+      console.log("אירוע לא נוצר או עודכן:", error);
+      alert("הייתה שגיאה בשמירת האירוע. אנא נסה שוב.");
     }
   };
 
@@ -60,7 +86,8 @@ const NewEvent: React.FC = () => {
 
   return (
     <div className="event-container">
-      <h2>יצירת אירוע חדש</h2>
+              <h2>{isEdit ? "עדכן אירוע" : "צור אירוע"}</h2>
+
       <form onSubmit={handleSubmit}>
         <label>שם האירוע:</label>
         <input
@@ -107,7 +134,7 @@ const NewEvent: React.FC = () => {
 
         {image && <p>✔ תמונה נבחרה: {image.name}</p>}
 
-        <button type="submit">צור אירוע</button>
+        <button type="submit">{isEdit ? "עדכן אירוע" : "צור אירוע"}</button>
       </form>
     </div>
   );
