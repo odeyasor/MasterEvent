@@ -16,7 +16,7 @@ const groupService = {
   },
 
   // Get group by id
-  getGroup: async (id: string): Promise<Group> => {
+  getGroup: async (id: number): Promise<Group> => {
     const response: AxiosResponse<Group> = await apiClient.get(`/Group/${id}`);
     return response.data;
   },

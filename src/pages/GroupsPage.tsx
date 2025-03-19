@@ -36,7 +36,7 @@ const OrganizerGroupsPage: React.FC = () => {
     <div className="organizer-groups-page">
       <h1>הקבוצות שלי</h1>
 
-      <button onClick={() => navigate('/add-group')}>הוסף קבוצה חדשה</button>
+      <button onClick={() => navigate('/group-form')}>הוסף קבוצה חדשה</button>
 
       {loading ? (
         <p>טוען קבוצות...</p>
@@ -47,6 +47,9 @@ const OrganizerGroupsPage: React.FC = () => {
               <h2>{group.name}</h2>
               <button onClick={() => setSelectedGroupId(Number(group.id))}>
                 הצג אורחים
+              </button>
+              <button onClick={() => navigate(`/group-form/${group.id}`)}>
+                עריכה
               </button>
             </div>
           ))}
