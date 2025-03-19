@@ -11,11 +11,13 @@ import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
 import NewEventPage from '../components/forms/EventForm.tsx';
 import OKPage from '../pages/OKPage.tsx';
-import EditEventPage from "../pages/EditEventPage.tsx"
+import EditEventPage from "../pages/EventDetails.tsx"
 import NewGroupPage from '../pages/NewGroupPage.tsx';
 import EventsPage from '../pages/EventsPage.tsx';
 import EventForm from '../components/forms/EventForm.tsx';
 import ConfirmedGuestsList from "../pages/guestsInEventPage.tsx"
+import EventDetails from '../pages/EventDetails.tsx';
+
 
 const AppRoutes = () => {
   return (
@@ -33,6 +35,7 @@ const AppRoutes = () => {
           <Route path="/new-event" element={<EventForm />} /> 
           <Route path="/edit-event/:eventId" element={<EventForm />} /> {/* נתיב לדף העריכה */}
           <Route path='/group' element={<OrganizerGroupsPage />}/>
+          <Route path="/event-details/:eventId" element={<EventDetails />} /> {/* נתיב לדף העריכה */}
           <Route path="/choose-guests" element={<ChooseGuestsPage />} /> 
           <Route path="/myEvent" element={<EventsPage />} /> 
           <Route path="/edit-event/:eventId" element={<EditEventPage />} />
