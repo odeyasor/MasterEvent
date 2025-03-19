@@ -24,10 +24,6 @@ const DashboardPage = () => {
     fetchEvents();
   }, []);
 
- 
-
-  
-
   return (
     <div className="dashboard-container">
      
@@ -38,6 +34,7 @@ const DashboardPage = () => {
 
         <button className="dashboard-button" onClick={()=>navigate("/events") }>📅 אירועים קודמים</button>
         <button className="dashboard-button" >📜 רשימת אורחים</button>
+
       </main>
     </div>
   );

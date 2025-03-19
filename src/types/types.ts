@@ -28,6 +28,7 @@ export interface Guest {
   name: string;
   mail: string;
   gender: Gender;
+  group: string;
 }
 export interface GuestInEvent {
   id: string;
