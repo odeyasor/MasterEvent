@@ -36,18 +36,18 @@ const guestService = {
     await apiClient.delete(`/guests/${id}`);
   },
 
-  SendEmails: async (eventId: number, subject: string, body: string): Promise<void> => {
+  sendEmails: async (eventId: number, subject: string, body: string): Promise<void> => {
     await apiClient.post(`/Guest/sendemails?eventId=${eventId}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
 },
 
 
-  GetGuestsByGroup: async (groupId: number): Promise<Guest[]> => {
+  getGuestsByGroup: async (groupId: number): Promise<Guest[]> => {
     const response:AxiosResponse<Guest[]> = await apiClient.get(`/Guest/group/${groupId}`, {
       params: {groupId}
     })
     return response.data;
   },
-  GetGuestsByEvent: async (eventId: number): Promise<Guest[]> => {
+  getGuestsByEvent: async (eventId: number): Promise<Guest[]> => {
     const response:AxiosResponse<Guest[]> = await apiClient.get(`/Guest/event/${eventId}`, {
       params: {eventId}
     })

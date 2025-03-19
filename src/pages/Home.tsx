@@ -26,30 +26,15 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>שלום, {userName}!</h1>
-      </header>
+     
       <main className="dashboard-content">
         <button className="dashboard-button" onClick={() => navigate('/new-event')}>
           ➕ צור אירוע חדש
         </button>
 
-        <button className="dashboard-button" onClick={()=>navigate("/myEvent") }>📅 אירועים קודמים</button>
-        <button className="dashboard-button" onClick={() => navigate("/group")}>📜 רשימת אורחים</button>
+        <button className="dashboard-button" onClick={()=>navigate("/events") }>📅 אירועים קודמים</button>
+        <button className="dashboard-button" >📜 רשימת אורחים</button>
 
-        <h2>האירועים שלך:</h2>
-        {error && <p className="error-message">{error}</p>}
-        {events.length > 0 ? (
-          <ul className="event-list">
-            {events.map((event, index) => (
-              <li key={index} className="event-item">
-                {event.name}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-events-message">אין לך אירועים כרגע.</p>
-        )}
       </main>
     </div>
   );

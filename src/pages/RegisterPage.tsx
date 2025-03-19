@@ -140,7 +140,7 @@ const RegisterPage = () => {
             {loading ? 'נרשם...' : 'הרשמה'}
           </button>
           <div className="register-link">
-          <p>יש לך חשבון? <span onClick={() => navigate('/LoginPage')}>היכנס כאן</span></p>
+          <p>יש לך חשבון? <span onClick={() => navigate('/login')}>היכנס כאן</span></p>
         </div>
         </form>
       </div>

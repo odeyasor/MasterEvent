@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import guestService from "../services/guestService.ts";
-import groupService from "../services/groupService.ts";
-import { Gender, Group } from "../types/types.ts";
-import { useAuth } from "../context/AuthContext.tsx"
+import guestService from "../../services/guestService.ts";
+import groupService from "../../services/groupService.ts";
+import { Gender, Group } from "../../types/types.ts";
+import { useAuth } from "../../context/AuthContext.tsx"
 
 const NewGuest: React.FC = () => {
   const { userId } = useAuth();

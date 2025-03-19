@@ -12,9 +12,9 @@ export interface Event {
 }
 
 export interface Group {
-  id: string;
+  id: number;
   name: string;
-  organizerId: string;
+  organizerId: number;
 }
 // Enum ל-Gender
 export enum Gender {

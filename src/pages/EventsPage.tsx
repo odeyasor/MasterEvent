@@ -58,7 +58,7 @@ const EventsPage = () => {
               </button>
               <button
                 className="delete-btn"
-                onClick={() => navigate(`/edit-event/${event.id}`)}
+                onClick={() => navigate(`/event-form/${event.id}`)}
               >
                 ✏️ עריכה
               </button>
