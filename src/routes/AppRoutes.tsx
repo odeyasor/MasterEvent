@@ -5,7 +5,7 @@ import RegisterPage from '../pages/RegisterPage.tsx';
 import Home from '../pages/Home.tsx';
 import NewEvent from '../components/forms/EventForm.tsx';
 import ChooseGuestsPage from "../pages/ChooseGuetsPage.tsx"
-import OrganizerGroups from "../pages/OrganizerGroupsPage.tsx"
+import OrganizerGroupsPage from "../pages/OrganizerGroupsPage.tsx"
 import Newguest from '../pages/NewGuestPage.tsx';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import { AuthProvider } from '../context/AuthContext.tsx';
@@ -15,6 +15,7 @@ import EditEventPage from "../pages/EditEventPage.tsx"
 import NewGroupPage from '../pages/NewGroupPage.tsx';
 import EventsPage from '../pages/EventsPage.tsx';
 import EventForm from '../components/forms/EventForm.tsx';
+import ConfirmedGuestsList from "../pages/guestsInEventPage.tsx"
 
 const AppRoutes = () => {
   return (
@@ -31,7 +32,7 @@ const AppRoutes = () => {
           <Route path="/Home" element={<Home />} />
           <Route path="/new-event" element={<EventForm />} /> 
           <Route path="/edit-event/:eventId" element={<EventForm />} /> {/* נתיב לדף העריכה */}
-
+          <Route path='/group' element={<OrganizerGroupsPage />}/>
           <Route path="/choose-guests" element={<ChooseGuestsPage />} /> 
           <Route path="/myEvent" element={<EventsPage />} /> 
           <Route path="/edit-event/:eventId" element={<EditEventPage />} />

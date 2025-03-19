@@ -39,7 +39,7 @@ const DashboardPage = () => {
         </button>
 
         <button className="dashboard-button" onClick={()=>navigate("/myEvent") }>📅 אירועים קודמים</button>
-        <button className="dashboard-button" >📜 רשימת אורחים</button>
+        <button className="dashboard-button" onClick={()=>navigate("/group")}>📜 רשימת אורחים</button>
 
         <h2>האירועים שלך:</h2>
         {error && <p className="error-message">{error}</p>}

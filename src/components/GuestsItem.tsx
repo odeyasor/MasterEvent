@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Guest } from '../types/types.ts';
-import groupService from '../services/groupService.ts';
 import guestService from '../services/guestService.ts';
-import '../styles/guests.css'
+import '../styles/guests.css';
+
 interface GuestsListProps {
   groupId: number;
-  onClose: () => void; // פונקציה לסגירת החלון
+  onClose: () => void;
 }
 
 const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
