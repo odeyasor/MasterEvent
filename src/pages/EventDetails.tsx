@@ -33,7 +33,9 @@ const EditEventPage = () => {
           <h1>ערוך את האירוע: {event.eventName}</h1>
           <div>
             <button onClick={()=>navigate("/choose-guests") }>הזמן אורחים</button>
-            <button>שלח הזמנות</button>
+            <button onClick={() => navigate(`/send-invitations/${eventId}`)}>
+  שלח הזמנות
+</button>
             <button>שינוי פרטי האירוע</button>
             <button>רשימת אורחים שאישרו הגעה</button>
             <button>סידור שולחנות</button>

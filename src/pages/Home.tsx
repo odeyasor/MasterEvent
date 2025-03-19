@@ -30,15 +30,13 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>שלום, {userName}!</h1>
-      </header>
+     
       <main className="dashboard-content">
         <button className="dashboard-button" onClick={() => navigate('/new-event')}>
           ➕ צור אירוע חדש
         </button>
 
-        <button className="dashboard-button" onClick={()=>navigate("/myEvent") }>📅 אירועים קודמים</button>
+        <button className="dashboard-button" onClick={()=>navigate("/events") }>📅 אירועים קודמים</button>
         <button className="dashboard-button" >📜 רשימת אורחים</button>
       </main>
     </div>
