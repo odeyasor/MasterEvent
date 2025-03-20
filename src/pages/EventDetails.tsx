@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import eventService from "../services/eventService.ts";  // שירות לשלוף את פרטי האירוע
+import { useParams, useNavigate } from "react-router-dom";
+import eventService from "../services/eventService.ts"; // שירות לשלוף את פרטי האירוע
 
 const EditEventPage = () => {
   const navigate = useNavigate();
-  const { eventId } = useParams();  // קבלת מזהה האירוע מה-URL
+  const { eventId } = useParams(); // קבלת מזהה האירוע מה-URL
   const [event, setEvent] = useState<any>(null);
 
   useEffect(() => {
@@ -31,15 +30,27 @@ const EditEventPage = () => {
       {event ? (
         <>
           <h1>ערוך את האירוע: {event.eventName}</h1>
+
+     
+
           <div>
-          <button onClick={() => navigate(`/choose-guests/${eventId}`)}>הזמן אורחים</button>
+            <button onClick={() => navigate(`/choose-guests/${eventId}`)}>הזמן אורחים</button>
             <button onClick={() => navigate(`/send-invitations/${eventId}`)}>שלח הזמנות</button>
-            <button onClick={() => navigate(`/edit-event/${eventId}`)} >שינוי פרטי האירוע</button>
+            <button onClick={() => navigate(`/edit-event/${eventId}`)}>שינוי פרטי האירוע</button>
             <button onClick={() => navigate(`/guests-event/${eventId}`)}>רשימת אורחים שאישרו הגעה</button>
             <button onClick={() => navigate("")}>סידור שולחנות</button>
           </div>
-        </>
 
+               {/* הצגת תמונת ההזמנה אם קיימת */}
+               {event.invitation && (
+            <img
+              src={event.invitation}
+              alt="הזמנה לאירוע"
+              className="event-invitation-image"
+              style={{ maxWidth: "300px", height: "auto", borderRadius: "10px", margin: "10px auto", display: "block" }}
+
+            />)}
+        </>
       ) : (
         <p>טוען את פרטי האירוע...</p>
       )}

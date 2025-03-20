@@ -78,12 +78,13 @@ const ChooseGuestsPage = () => {
                     guestId,
                     eventId,
                     ok: false,
-                    group:3
+                    groupId:guest.groupId
                 };
                 console.log("Adding guest to event:", guestInEvent);
 
                 await guestInEventService.createGuestInEvent(guestInEvent);
                 alert("Guests confirmed successfully!");
+                navigate(`/event-details/${eventId}`)
 
             } catch (error) {
                 console.error(`Error processing guest ${guestId}:`, error);

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { eventApi } from '../api/eventApi';
+import { apiClient } from '../api/apiClient.ts';
 
 export const createEvent = createAsyncThunk('events/create', async (event: FormData) => {
   return await eventApi.create(event);

@@ -3,13 +3,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import eventService from "../../services/eventService.ts";
 import organizerService from "../../services/organizerService.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
-import { Event } from "../../types/types.ts"; // ייבוא הממשק
+import { Event } from "../../types/types.ts";
 import "../../styles/NewEvent.css";
 
 const EventForm: React.FC = () => {
   const { userId } = useAuth();
   const [event, setEvent] = useState<Partial<Event>>({
-    eventName: "",
     eventDate: "",
     address: "",
     details: "",
@@ -25,14 +24,11 @@ const EventForm: React.FC = () => {
 
   useEffect(() => {
     if (eventId) {
-      console.log(eventId);
       setIsEdit(true);
       const fetchEventData = async () => {
         try {
           const fetchedEvent = await eventService.getEvent(eventId);
-          console.log(fetchedEvent)
           setEvent(fetchedEvent);
-
         } catch (error) {
           console.log("לא ניתן לטעון את פרטי האירוע:", error);
         }
@@ -43,45 +39,60 @@ const EventForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!userId) {
       alert("שגיאה: המשתמש אינו מחובר.");
       return;
     }
-
+  
     try {
       const organizer = await organizerService.getOrganizer(userId);
       if (!organizer) {
         alert("שגיאה: לא נמצא מארגן.");
         return;
       }
-
-      const eventData: Event = {
-        id: event.id || 0, // אם זה אירוע חדש, הערך יתעלם בשרת
+  
+      const eventData = {
         organizerId: organizer.id,
         eventName: event.eventName || "",
         eventDate: event.eventDate || "",
         address: event.address || "",
         details: event.details || "",
         seperation: event.seperation || false,
-        invitation: "",
-        photos: image ? [] : event.photos,
-        guests: event.guests || [],
+        invitation: "", // נכניס את הקובץ בהמשך אם צריך
+        photos: [],
+        guests: [],
       };
-
-      if (isEdit && eventId) {
-        await eventService.updateEvent(eventId, eventData);
-        navigate(`/event-details/${eventId}`);
+  
+      if (image) {
+        // המרת תמונה לנתון מתאים אם ה-API דורש
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = async () => {
+          eventData.invitation = reader.result as string; // שמירת התמונה בפורמט base64
+          if (isEdit && eventId) {
+            await eventService.updateEvent(eventId, eventData);
+            navigate(`/event-details/${eventId}`);
+          } else {
+            await eventService.createEvent(eventData);
+            navigate("/events");
+          }
+        };
       } else {
-        await eventService.createEvent(eventData);
-        navigate("/events");
+        if (isEdit && eventId) {
+          await eventService.updateEvent(eventId, eventData);
+          navigate(`/event-details/${eventId}`);
+        } else {
+          await eventService.createEvent(eventData);
+          navigate("/events");
+        }
       }
     } catch (error) {
       console.log("אירוע לא נוצר או עודכן:", error);
       alert("הייתה שגיאה בשמירת האירוע. אנא נסה שוב.");
     }
   };
-
+  
   return (
     <div className="event-container">
       <h2>{isEdit ? "עדכן אירוע" : "צור אירוע"}</h2>

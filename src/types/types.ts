@@ -28,14 +28,14 @@ export interface Guest {
   name: string;
   mail: string;
   gender: Gender;
-  group: Number;
+  groupId: Number;
 }
 export interface GuestInEvent {
   id: string;
   guestId: string;
   eventId: string;
   ok: boolean;
-  group: Number;
+  groupId: Number;
 }
 
   export interface Organizer {

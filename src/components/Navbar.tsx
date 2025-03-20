@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
           <Link to="/groups">קבוצות</Link>
         </li>
         <li>
-          <Link to="/guests-event">אורחים</Link>
+          <Link to="/Home">בית</Link>
         </li>
         <li>
           <Link to="/images">תמונות</Link>
