@@ -31,7 +31,6 @@ const LoginPage: React.FC = () => {
     setLoading(true);
   
     try {
-
       const response = await fetch('https://localhost:7112/api/Login', {
         method: 'POST',
         headers: {
@@ -40,67 +39,60 @@ const LoginPage: React.FC = () => {
         body: JSON.stringify({ mail, pass }),
       });
   
-      // אם התגובה אינה JSON (כמו במקרה של טוקן גולמי)
+      // בדיקת תגובת השרת
+      if (!response.ok) {
+        throw new Error('שם המשתמש או הסיסמה אינם נכונים.');
+      }
+  
+      // קריאת תגובת השרת
       const textResponse = await response.text();
       console.log('Server raw response:', textResponse);
   
-      let data;
-      let token;
-  
-      try {
-        // ננסה לפרסר את התגובה כ-JSON
-        data = JSON.parse(textResponse);
-        token = data.token;
-      } catch (err) {
-        // אם זה לא JSON, אז כנראה שזה טוקן גולמי
-        token = textResponse;
-      }
-  
+      let token = textResponse;
       if (!token) {
-        throw new Error('התגובה לא כוללת טוקן');
+        throw new Error('התחברות נכשלה, נא לבדוק את פרטי ההתחברות.');
       }
   
       // פענוח הטוקן
-      const decoded = jwtDecode<{ 
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string, 
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string 
+      const decoded = jwtDecode<{
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string,
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string
       }>(token);
   
       console.log('Decoded token:', decoded);
   
-
       // בדיקה שהערכים קיימים
       const userName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
       const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-
+  
       if (!userName || !userId) {
-        throw new Error('הטוקן אינו מכיל את הנתונים הדרושים');
+        throw new Error('אירעה שגיאה בטעינת נתוני המשתמש. נא לנסות שוב מאוחר יותר.');
       }
-
+  
       // שמירת הטוקן בלוקאל סטורג'
       localStorage.setItem('token', token);
-
+  
       // עדכון הסטטוס ב-AuthContext
       login(token, userName, userId);
-
+  
       console.log('Login successful, navigating to Home...');
       navigate('/Home');
   
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response) {
-          setError(err.response.data?.message || 'שגיאה בהתחברות');
+          setError(err.response.data?.message || 'שם המשתמש או הסיסמה אינם נכונים.');
         } else if (err.request) {
-          setError('לא התקבלה תשובה מהשרת');
+          setError('לא ניתן להתחבר לשרת. בדוק את חיבור האינטרנט שלך ונסה שוב.');
         } else {
-          setError('שגיאה בבקשה');
+          setError('שגיאה בבקשה, נא לנסות שוב.');
         }
       } else if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('שגיאה בקישור לשרת');
+        setError('שגיאה בהתחברות, נסה שנית מאוחר יותר.');
       }
-
+  
       console.error('Login error:', err);
     } finally {
       setLoading(false);

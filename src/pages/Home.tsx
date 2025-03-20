@@ -28,7 +28,7 @@ const DashboardPage = () => {
     <div className="dashboard-container">
      
       <main className="dashboard-content">
-        <button className="dashboard-button" onClick={() => navigate('/new-event')}>
+        <button className="dashboard-button" onClick={() => navigate('/event-form')}>
           ➕ צור אירוע חדש
         </button>
 

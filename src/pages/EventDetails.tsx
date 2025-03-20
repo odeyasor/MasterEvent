@@ -5,8 +5,8 @@ import eventService from "../services/eventService.ts";  // שירות לשלו�
 
 const EditEventPage = () => {
   const navigate = useNavigate();
-  const { eventId } = useParams();  // קבלת מזהה האירוע מה-URL
-  const [event, setEvent] = useState<any>(null);
+  const { eventId } = useParams();
+    const [event, setEvent] = useState<any>(null);
 
   useEffect(() => {
     const fetchEvent = async () => {

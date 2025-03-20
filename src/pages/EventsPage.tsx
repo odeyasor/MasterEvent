@@ -8,7 +8,6 @@ const EventsPage = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const userId = localStorage.getItem("userId"); // מזהה המארגן
-
   useEffect(() => {
     const fetchEvents = async () => {
       console.log("Fetching events..."); // קונסולה להתחלת הפונקציה
@@ -58,7 +57,7 @@ const EventsPage = () => {
               </button>
               <button
                 className="delete-btn"
-                onClick={() => navigate(`/event-form/${event.id}`)}
+                onClick={() => navigate(`/edit-event/${event.id}`)}
               >
                 ✏️ עריכה
               </button>

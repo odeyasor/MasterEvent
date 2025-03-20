@@ -71,7 +71,7 @@ const NewEvent: React.FC = () => {
         navigate(`/event-details/${eventId}`);
       } else {
         await eventService.createEvent(eventData);
-        navigate("/Home");
+        navigate(`/event-details/${eventId}`);
       }
     } catch (error) {
       console.log("אירוע לא נוצר או עודכן:", error);
