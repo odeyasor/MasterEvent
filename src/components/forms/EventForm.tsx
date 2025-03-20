@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext.tsx";
 import { Event } from "../../types/types.ts"; // ייבוא הממשק
 import "../../styles/NewEvent.css";
 
-const NewEvent: React.FC = () => {
+const EventForm: React.FC = () => {
   const { userId } = useAuth();
   const [event, setEvent] = useState<Partial<Event>>({
     eventName: "",
@@ -25,11 +25,14 @@ const NewEvent: React.FC = () => {
 
   useEffect(() => {
     if (eventId) {
+      console.log(eventId);
       setIsEdit(true);
       const fetchEventData = async () => {
         try {
-          const fetchedEvent: Event = await eventService.getEvent(eventId);
+          const fetchedEvent = await eventService.getEvent(eventId);
+          console.log(fetchedEvent)
           setEvent(fetchedEvent);
+
         } catch (error) {
           console.log("לא ניתן לטעון את פרטי האירוע:", error);
         }
@@ -62,7 +65,7 @@ const NewEvent: React.FC = () => {
         details: event.details || "",
         seperation: event.seperation || false,
         invitation: "",
-        photos: image ? [...(event.photos || []), { url: URL.createObjectURL(image) }] : event.photos,
+        photos: image ? [] : event.photos,
         guests: event.guests || [],
       };
 
@@ -71,7 +74,7 @@ const NewEvent: React.FC = () => {
         navigate(`/event-details/${eventId}`);
       } else {
         await eventService.createEvent(eventData);
-        navigate("/Home");
+        navigate("/events");
       }
     } catch (error) {
       console.log("אירוע לא נוצר או עודכן:", error);
@@ -135,4 +138,4 @@ const NewEvent: React.FC = () => {
   );
 };
 
-export default NewEvent;
+export default EventForm;

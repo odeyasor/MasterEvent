@@ -16,7 +16,9 @@ const eventService = {
 
   // Get event by id
   getEvent: async (id: string): Promise<Event> => {
+    console.log(id);
     const response: AxiosResponse<Event> = await apiClient.get(`/Event/${id}`);
+    console.log(response.data);
     return response.data;
   },
 

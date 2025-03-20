@@ -32,15 +32,14 @@ const EditEventPage = () => {
         <>
           <h1>ערוך את האירוע: {event.eventName}</h1>
           <div>
-            <button onClick={()=>navigate("/choose-guests") }>הזמן אורחים</button>
-            <button onClick={() => navigate(`/send-invitations/${eventId}`)}>
-  שלח הזמנות
-</button>
-            <button>שינוי פרטי האירוע</button>
-            <button>רשימת אורחים שאישרו הגעה</button>
-            <button>סידור שולחנות</button>
+          <button onClick={() => navigate(`/choose-guests/${eventId}`)}>הזמן אורחים</button>
+            <button onClick={() => navigate(`/send-invitations/${eventId}`)}>שלח הזמנות</button>
+            <button onClick={() => navigate(`/edit-event/${eventId}`)} >שינוי פרטי האירוע</button>
+            <button onClick={() => navigate(`/guests-event/${eventId}`)}>רשימת אורחים שאישרו הגעה</button>
+            <button onClick={() => navigate("")}>סידור שולחנות</button>
           </div>
         </>
+
       ) : (
         <p>טוען את פרטי האירוע...</p>
       )}

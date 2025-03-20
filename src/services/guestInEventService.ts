@@ -23,7 +23,9 @@ const guestInEventService = {
 
   // Create new guest in event
   createGuestInEvent: async (guestInEvent: GuestInEventCreate): Promise<GuestInEvent> => {
+    console.log("Sending to server:", guestInEvent);
     const response: AxiosResponse<GuestInEvent> = await apiClient.post('/GuestInEvent', guestInEvent);
+    console.log("no");
     return response.data;
   },
 
@@ -56,11 +58,15 @@ const guestInEventService = {
     return response.data;
   },
 
-  // Get confirmed guests (ok = true)
-  getConfirmedGuests: async (eventId: string): Promise<GuestInEvent[]> => {
-    const response: AxiosResponse<GuestInEvent[]> = await apiClient.get(`/GuestInEvent/confirmed/${eventId}`);
-    return response.data;
-  }
+// בקשת GET לאירוע עם eventId ספציפי
+getConfirmedGuests: async (eventId: string): Promise<GuestInEvent[]> => {
+  console.log(eventId);
+  const response: AxiosResponse<GuestInEvent[]> = await apiClient.get(`/GuestInEvent/confirmed/${eventId}`);
+  console.log(response.data);
+
+  return response.data;
+}
+
 };
 
 export default guestInEventService;

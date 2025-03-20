@@ -48,9 +48,6 @@ const OrganizerGroupsPage: React.FC = () => {
               <button onClick={() => setSelectedGroupId(Number(group.id))}>
                 הצג אורחים
               </button>
-              <button onClick={() => navigate(`/group-form/${group.id}`)}>
-                עריכה
-              </button>
             </div>
           ))}
         </div>

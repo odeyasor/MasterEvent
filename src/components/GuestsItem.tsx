@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Guest } from '../types/types.ts';
+import { Group, Guest } from '../types/types.ts';
 import guestService from '../services/guestService.ts';
 import '../styles/guests.css';
+import { useNavigate } from 'react-router-dom';
+import groupService from '../services/groupService.ts';
+
 
 interface GuestsListProps {
   groupId: number;
@@ -11,12 +14,17 @@ interface GuestsListProps {
 const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [group, setGroup]= useState<Group>();
+  const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchGuests = async () => {
       try {
-        const guestsData = await guestService.GetGuestsByGroup(groupId);
+        const guestsData = await guestService.getGuestsByGroup(groupId);
         setGuests(guestsData);
+        const groupData = await groupService.getGroup(groupId)
+        setGroup(groupData);
       } catch (error) {
         console.error('Error fetching guests:', error);
       } finally {
@@ -43,6 +51,8 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
           <p>אין אורחים בקבוצה זו.</p>
         )}
         <button onClick={onClose}>סגור</button>
+        <button onClick={() => navigate(`/add-guest/${group?.name}`)}>הוסף אורח לקבוצה זו</button>
+
       </div>
     </div>
   );

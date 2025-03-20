@@ -21,7 +21,7 @@ const SendInvitationsPage = () => {
         const event = await eventService.getEvent(eventId);
         setEventName(event.eventName); 
         setSubject(`הזמנה לאירוע: ${event.eventName}`); // נושא ברירת מחדל
-        setContent(`שלום,\n\nאתם מוזמנים לאירוע "${event.eventName}". \n\nנא אשרו את השתתפותכם בקישור הבא: [קישור לאישור]`);
+        setContent(`שלום,\n\nאתם מוזמנים לאירוע "${event.eventName}". \n\nנא אשרו את השתתפותכם בקישור הבא: <a href="http://localhost:3000/ok">לחץ כאן לאישור</a>`);
       } catch (err) {
         console.error("שגיאה בטעינת פרטי האירוע", err);
       }
