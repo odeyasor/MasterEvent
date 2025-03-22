@@ -32,8 +32,8 @@ const DashboardPage = () => {
           ➕ צור אירוע חדש
         </button>
 
-        <button className="dashboard-button" onClick={()=>navigate("/events") }>📅 אירועים קודמים</button>
-        <button className="dashboard-button" >📜 רשימת אורחים</button>
+        <button className="dashboard-button" onClick={()=>navigate("/events") }>📅 האירועים שלי</button>
+        <button className="dashboard-button" onClick={()=>navigate("/groups") }>📜 רשימת אורחים</button>
 
       </main>
     </div>

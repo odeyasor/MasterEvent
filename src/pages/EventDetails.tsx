@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import eventService from "../services/eventService.ts";  // שירות לשלוף את פרטי האירוע
+import { useParams, useNavigate, Outlet } from "react-router-dom";
+import eventService from "../services/eventService.ts"; // שירות לשלוף את פרטי האירוע
 
 const EditEventPage = () => {
   const navigate = useNavigate();
-  const { eventId } = useParams();
-    const [event, setEvent] = useState<any>(null);
+  const { eventId } = useParams(); // קבלת מזהה האירוע מה-URL
+  const [event, setEvent] = useState<any>(null);
+  const [showInvitation, setShowInvitation] = useState<boolean>(true); // התמונה תוצג ברגע שהעמוד יטען
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -26,24 +26,48 @@ const EditEventPage = () => {
     fetchEvent();
   }, [eventId]);
 
+  const handleButtonClick = (path: string) => {
+    if (path !== "/edit-event/{eventId}/arrange-tables") {
+      setShowInvitation(false); // אם לוחצים על כפתור אחר, התמונה מוסתרת
+    }
+    navigate(path);
+  };
+
   return (
     <div className="edit-event-container">
       {event ? (
         <>
           <h1>ערוך את האירוע: {event.eventName}</h1>
+
+          {/* כפתורים */}
           <div>
-            <button onClick={()=>navigate("/choose-guests") }>הזמן אורחים</button>
-            <button onClick={() => navigate(`/send-invitations/${eventId}`)}>
-  שלח הזמנות
-</button>
-            <button>שינוי פרטי האירוע</button>
-            <button>רשימת אורחים שאישרו הגעה</button>
-            <button>סידור שולחנות</button>
+            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/choose-guests`)}>הזמן אורחים</button>
+            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/send-invitations`)}>שלח הזמנות</button>
+            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/edit-details`)}>שינוי פרטי האירוע</button>
+            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/guests-list`)}>רשימת אורחים שאישרו הגעה</button>
+            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/arrange-tables`)}>סידור שולחנות</button>
           </div>
+
+          {/* הצגת תמונת ההזמנה אם showInvitation הוא true */}
+          {showInvitation && event.invitation && (
+            <div className="event-invitation">
+              <img
+                src={event.invitation}
+                alt="הזמנה לאירוע"
+                className="event-invitation-image"
+                style={{ maxWidth: "300px", height: "auto", borderRadius: "10px", margin: "10px auto", display: "block" }}
+              />
+            </div>
+          )}
         </>
       ) : (
         <p>טוען את פרטי האירוע...</p>
       )}
+
+      {/* כאן יוצג התוכן של כל דף בהתאם לנווט */}
+      <div className="event-content">
+        <Outlet />
+      </div>
     </div>
   );
 };

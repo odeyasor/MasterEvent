@@ -8,26 +8,22 @@ const EventsPage = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const userId = localStorage.getItem("userId"); // מזהה המארגן
+
   useEffect(() => {
     const fetchEvents = async () => {
-      console.log("Fetching events..."); // קונסולה להתחלת הפונקציה
       if (!userId) {
         setError("שגיאה: משתמש לא מחובר.");
-        console.error("No userId found"); // קונסולה אם אין מזהה משתמש
         return;
       }
 
       try {
-        console.log("User ID: ", userId); // קונסולה להצגת מזהה המשתמש
         const userEvents = await eventService.getEventsByOrganizerId(userId);
-        console.log("Fetched events: ", userEvents); // קונסולה להצגת האירועים שהתקבלו
         if (userEvents.length === 0) {
-          setError("אין לך אירועים כרגע.");
+          setError("אין לך אירועים כרגע");
         } else {
           setEvents(userEvents);
         }
       } catch (err) {
-        console.error("Error fetching events: ", err); // קונסולה לשגיאה בצד השרת
         setError("אירעה שגיאה בטעינת האירועים.");
       }
     };
@@ -35,10 +31,26 @@ const EventsPage = () => {
     fetchEvents();
   }, [userId]);
 
+  // פונקציה למחיקת אירוע
+  const deleteEvent = async (eventId: number) => {
+    if (!window.confirm("האם אתה בטוח שברצונך למחוק את האירוע?")) return;
+
+    try {
+      await eventService.deleteEvent(eventId);
+      setEvents(events.filter(event => event.id !== eventId)); // מעדכן את הרשימה אחרי מחיקה
+    } catch (error) {
+      console.error("שגיאה במחיקת האירוע:", error);
+      alert("אירעה שגיאה בעת מחיקת האירוע.");
+    }
+  };
+
   return (
     <div className="events-container">
       <h1>האירועים שלי</h1>
       {error && <p className="error-message">{error}</p>}
+      <button className="dashboard-button" onClick={() => navigate('/event-form')}>
+          ➕ צור אירוע חדש
+        </button>
       <div className="events-grid">
         {events.map((event) => (
           <div key={event.id} className="event-card">
@@ -56,12 +68,18 @@ const EventsPage = () => {
                 🔍 פרטים
               </button>
               <button
-                className="delete-btn"
+                className="edit-btn"
                 onClick={() => navigate(`/edit-event/${event.id}`)}
               >
                 ✏️ עריכה
               </button>
-              </div>
+              <button
+                className="delete-btn"
+                onClick={() => deleteEvent(event.id)}
+              >
+                🗑 מחק
+              </button>
+            </div>
           </div>
         ))}
       </div>

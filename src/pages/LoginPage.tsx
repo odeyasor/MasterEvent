@@ -3,19 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/login-and-register.css';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../context/AuthContext.tsx';
-import apiClient from "../api/apiClient.ts";
 import axios from 'axios';
-
-const decodeToken = (token: string) => {
-  try {
-    const decoded = jwtDecode(token);
-    console.log('Decoded Token:', decoded);
-    return decoded;
-  } catch (e) {
-    console.error('Invalid token', e);
-    return null;
-  }
-};
 
 const LoginPage: React.FC = () => {
   const [mail, setMail] = useState<string>('');
@@ -29,77 +17,78 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-  
+
     try {
-      const response = await fetch('https://localhost:7112/api/Login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ mail, pass }),
-      });
-  
-      // בדיקת תגובת השרת
-      if (!response.ok) {
-        throw new Error('שם המשתמש או הסיסמה אינם נכונים.');
+      console.log('Submitting login request with:', { mail, pass });
+
+      // שליחת הבקשה בעזרת axios
+      const response = await axios.post('https://localhost:7112/api/Login', { mail, pass });
+
+      let token: string | undefined;
+
+      // אם התגובה אינה JSON (כמו במקרה של טוקן גולמי)
+      const textResponse = response.data;
+
+      console.log('Server response:', textResponse);
+
+      try {
+        // ננסה לפרסר את התגובה כ-JSON
+        const data = JSON.parse(textResponse);
+        token = data.token;
+      } catch (err) {
+        // אם זה לא JSON, אז כנראה שזה טוקן גולמי
+        token = textResponse;
       }
-  
-      // קריאת תגובת השרת
-      const textResponse = await response.text();
-      console.log('Server raw response:', textResponse);
-  
-      let token = textResponse;
+
       if (!token) {
-        throw new Error('התחברות נכשלה, נא לבדוק את פרטי ההתחברות.');
+        throw new Error('התגובה לא כוללת טוקן');
       }
-  
+
       // פענוח הטוקן
-      const decoded = jwtDecode<{
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string,
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string
+      const decoded = jwtDecode<{ 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": string, 
+        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": string 
       }>(token);
-  
+
       console.log('Decoded token:', decoded);
-  
+
       // בדיקה שהערכים קיימים
       const userName = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
       const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-  
+
       if (!userName || !userId) {
-        throw new Error('אירעה שגיאה בטעינת נתוני המשתמש. נא לנסות שוב מאוחר יותר.');
+        throw new Error('הטוקן אינו מכיל את הנתונים הדרושים');
       }
-  
+
       // שמירת הטוקן בלוקאל סטורג'
       localStorage.setItem('token', token);
-  
+
       // עדכון הסטטוס ב-AuthContext
       login(token, userName, userId);
-  
+
       console.log('Login successful, navigating to Home...');
       navigate('/Home');
-  
+
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response) {
-          setError(err.response.data?.message || 'שם המשתמש או הסיסמה אינם נכונים.');
+          setError(err.response.data?.message || 'שגיאה בהתחברות');
         } else if (err.request) {
-          setError('לא ניתן להתחבר לשרת. בדוק את חיבור האינטרנט שלך ונסה שוב.');
+          setError('לא התקבלה תשובה מהשרת');
         } else {
-          setError('שגיאה בבקשה, נא לנסות שוב.');
+          setError('שגיאה בבקשה');
         }
       } else if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('שגיאה בהתחברות, נסה שנית מאוחר יותר.');
+        setError('שגיאה בהתחברות');
       }
-  
       console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
   };
-  
-  
+
   const navigateToRegister = () => {
     navigate('/register');
   };

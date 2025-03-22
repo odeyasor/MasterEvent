@@ -1,3 +1,9 @@
+// מבנה הנתונים של המייל
+export type EmailRequest = {
+  eventId: string;
+  subject: string;
+  body: string;
+};
 export interface Event {
   id: number;
   organizerId: string;
@@ -28,14 +34,14 @@ export interface Guest {
   name: string;
   mail: string;
   gender: Gender;
-  group: string;
+  groupId: Number;
 }
 export interface GuestInEvent {
   id: string;
   guestId: string;
   eventId: string;
   ok: boolean;
-  group: string;
+  groupId: Number;
 }
 
   export interface Organizer {

@@ -16,7 +16,9 @@ const eventService = {
 
   // Get event by id
   getEvent: async (id: string): Promise<Event> => {
+    console.log(id);
     const response: AxiosResponse<Event> = await apiClient.get(`/Event/${id}`);
+    console.log(response.data);
     return response.data;
   },
 
@@ -35,7 +37,7 @@ const eventService = {
   },
 
   // Delete event
-  deleteEvent: async (id: string): Promise<void> => {
+  deleteEvent: async (id: number): Promise<void> => {
     await apiClient.delete(`/Event/${id}`);
   },
 

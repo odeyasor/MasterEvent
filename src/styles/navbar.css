@@ -1,72 +1,121 @@
-/* עיצוב הכללי של ה-navbar */
+body {
+  background-color: #000 !important;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+h1, h2, h3 {
+  color: #0ff; /* תכלת זוהר */
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
+
+p {
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+button {
+  background-color: #ff00ff; /* סגול ניאון */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+  transition: 0.3s;
+}
+
+button:hover {
+  box-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff;
+  transform: scale(1.1);
+}
+
+a {
+  color: #00ff00; /* ירוק ניאון */
+  text-decoration: none;
+  font-weight: bold;
+  text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+}
+
+a:hover {
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  margin: 20px;
+}
+
 .navbar {
-    background-color: #4CAF50; /* צבע רקע ירוק */
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .navbar ul {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .navbar li {
-    margin: 0 15px;
-  }
-  
-  .navbar a, .navbar button {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    padding: 8px 15px;
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  /* מעבר צבע כשעוברים עם העכבר */
-  .navbar a:hover, .navbar button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-  }
-  
-  /* עיצוב כפתור יציאה */
-  .navbar button {
-    background-color: #f44336;
-    border-radius: 5px;
-    padding: 8px 20px;
-    font-size: 16px;
-    font-weight: 600;
-  }
-  
-  /* מציג את שם המשתמש באופן יותר בולט */
-  .navbar span {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-  }
-  
-  /* עיצוב מותאם לגרסת מובייל */
-  @media (max-width: 768px) {
-    .navbar {
+  background-color: #111 !important;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3);
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  margin: 0 15px;
+}
+
+.navbar a, .navbar button {
+  color: #0ff; /* תכלת זוהר */
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+}
+
+.navbar a:hover, .navbar button:hover {
+  background-color: rgba(0, 255, 255, 0.2);
+  color: #fff;
+}
+
+.navbar button {
+  background-color: #ff00ff !important;
+  border-radius: 5px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 0 10px #ff00ff;
+}
+
+.navbar span {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .navbar {
       flex-direction: column;
       align-items: flex-start;
-    }
-  
-    .navbar ul {
+  }
+
+  .navbar ul {
       flex-direction: column;
       width: 100%;
-    }
-  
-    .navbar li {
-      margin: 10px 0;
-    }
   }
-  
+
+  .navbar li {
+      margin: 10px 0;
+  }
+}

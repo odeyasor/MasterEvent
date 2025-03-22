@@ -1,48 +1,61 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import LoginPage from '../pages/LoginPage.tsx';
-import RegisterPage from '../pages/RegisterPage.tsx';
-import Home from '../pages/Home.tsx';
-import ChooseGuestsPage from "../pages/ChooseGuetsPage.tsx"
-import ProtectedRoute from './ProtectedRoute.tsx';
-import { AuthProvider } from '../context/AuthContext.tsx';
-import OKPage from '../pages/OKPage.tsx';
-import EditEventPage from "../pages/EventDetails.tsx"
-import EventsPage from '../pages/EventsPage.tsx';
-import EventForm from '../components/forms/EventForm.tsx';
-import ConfirmedGuestsList from "../pages/GuestsInEventPage.tsx"
-import EventDetails from '../pages/EventDetails.tsx';
-import Navbar from '../components/Navbar.tsx';
-import SendInvitationsPage from '../pages/SendInvitationsPage.tsx';
-import GroupForm from '../components/forms/GroupForm.tsx';
-import GroupsPage from '../pages/GroupsPage.tsx';
+import React from "react";
+import { Route, Routes, Navigate } from "react-router-dom";
+import { AuthProvider } from "../context/AuthContext.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
 
+import Navbar from "../components/Navbar.tsx";
+
+// עמודים
+import LoginPage from "../pages/LoginPage.tsx";
+import RegisterPage from "../pages/RegisterPage.tsx";
+import Home from "../pages/Home.tsx";
+import EventsPage from "../pages/EventsPage.tsx";
+import EventDetails from "../pages/EventDetails.tsx";
+import ChooseGuestsPage from "../pages/ChooseGuetsPage.tsx";
+import SendInvitationsPage from "../pages/SendInvitationsPage.tsx";
+import ConfirmedGuestsList from "../pages/guestsInEventPage.tsx";
+import GroupsPage from "../pages/GroupsPage.tsx";
+import OKPage from "../pages/OKPage.tsx";
+
+// טפסים
+import EventForm from "../components/forms/EventForm.tsx";
+import GroupForm from "../components/forms/GroupForm.tsx";
+import GuestForm from "../components/forms/GuestForm.tsx";
 
 const AppRoutes = () => {
   return (
     <AuthProvider>
-      <Navbar /> {/* הוספת הניווט לעמודים */}
+      <Navbar />
       <Routes>
-        {/* Public routes */}
+        {/* הפניה לעמוד התחברות בהרצה הראשונה */}
+        <Route path="/" element={<Navigate to="/login" />} />
+
+        {/* עמודים ציבוריים */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        
-        {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
-          <Route path='/' element={<OKPage />}/>
-          <Route path="/Home" element={<Home />} />
-          <Route path="/event-form" element={<EventForm />} /> 
-          <Route path="/events" element={<EventsPage />} /> 
-          <Route path="/event-details/:eventId" element={<EventDetails />} /> {/* נתיב לדף העריכה */}
-          <Route path="/edit-event/:eventId" element={<EventForm />} /> {/* נתיב לדף העריכה */}
-          <Route path='/groups' element={<GroupsPage />}/>
-          {/* <Route path="/choose-guests" element={<ChooseGuestsPage />} />  */}
-          <Route path="/group-form/:groupId" element={<GroupForm />} />    
-          <Route path="/send-invitations/:eventId" element={<SendInvitationsPage />} />
-     
+        <Route path="/ok" element={<OKPage />} />
+
+        {/* עמודים מוגנים */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/groups" element={<GroupsPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/event-form" element={<EventForm />} />
+          <Route path="/event-details/:eventId" element={<EventDetails />} />
+          <Route path="/edit-event/:eventId" element={<EventDetails />}>
+            <Route path="choose-guests" element={<ChooseGuestsPage />} />
+            <Route path="send-invitations" element={<SendInvitationsPage />} />
+            <Route path="edit-details" element={<EventForm />} />
+            <Route path="guests-list" element={<ConfirmedGuestsList />} />
+            <Route path="arrange-tables" element={<div>סידור שולחנות</div>} />
+          </Route>
+          <Route path="/groups" element={<GroupsPage />} />
+          <Route path="/group-form" element={<GroupForm />} />
+          <Route path="/add-guest/:groupName?" element={<GuestForm />} />
         </Route>
-        {/* Fallback route - redirect to login */}
-        <Route path="*" element={<LoginPage />} />
+
+        {/* ברירת מחדל - הפניה לעמוד ההתחברות */}
+        <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </AuthProvider>
   );

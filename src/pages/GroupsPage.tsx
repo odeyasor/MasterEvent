@@ -32,6 +32,15 @@ const OrganizerGroupsPage: React.FC = () => {
     fetchGroups();
   }, [userId]);
 
+  const handleDeleteGroup = async (groupId: number) => {
+    try {
+      await groupService.deleteGroup(groupId);
+      setGroups(groups.filter((group) => group.id !== groupId)); // עדכון רשימת הקבוצות
+    } catch (error) {
+      console.error('Error deleting group:', error);
+    }
+  };
+
   return (
     <div className="organizer-groups-page">
       <h1>הקבוצות שלי</h1>
@@ -48,9 +57,8 @@ const OrganizerGroupsPage: React.FC = () => {
               <button onClick={() => setSelectedGroupId(Number(group.id))}>
                 הצג אורחים
               </button>
-              <button onClick={() => navigate(`/group-form/${group.id}`)}>
-                עריכה
-              </button>
+              <button onClick={() => navigate(`/group-form/${group.id}`)}>עדכון קבוצה</button>
+              <button onClick={() => handleDeleteGroup(group.id)}>מחק קבוצה</button>
             </div>
           ))}
         </div>

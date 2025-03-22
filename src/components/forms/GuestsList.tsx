@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Guest } from '../../types/types';
+import guestService from '../../services/guestService.ts';
+import { Guest } from '../../types/types.ts';
+
 const GuestsList = () => {
-  // סטייט למארגנים
-  const [guests, setGuestS] = useState<Guest[]>([]);
+  // סטייט לאורחים
+  const [guests, setGuests] = useState<Guest[]>([]);
 
   // פעולה לקרוא לאורחים מהשרת
   useEffect(() => {
     const fetchGuests = async () => {
       try {
-        const response = await fetch('https://localhost:7112/api/Guest');
-        const data = await response.json();
+        const data = await guestService.getAllGuests();
         console.log(data); // זה יראה את מבנה הנתונים של האורחים
-        setGuestS(data); // עדכון הסטייט
+        setGuests(data); // עדכון הסטייט
       } catch (error) {
         console.error('Error fetching guests:', error);
       }
@@ -19,6 +20,24 @@ const GuestsList = () => {
 
     fetchGuests();
   }, []); // ריק, כלומר יפעל רק פעם אחת כשדף נטען
+
+  // פונקציה למחוק אורח
+  const handleDeleteGuest = async (guestId: string) => {
+    try {
+      await guestService.deleteGuest(guestId);
+      // לאחר מחיקה, נעדכן את הסטייט ונסיר את האורח מהרשימה
+      setGuests(guests.filter((guest) => guest.id !== guestId));
+    } catch (error) {
+      console.error('Error deleting guest:', error);
+    }
+  };
+
+  // פונקציה לעדכון אורח
+  const handleEditGuest = (guestId: string) => {
+    // פה נוכל לנווט לדף עדכון פרטי האורח, לפי מזהה האורח
+    // לדוגמה:
+    window.location.href = `/edit-guest/${guestId}`; // אם יש דף כזה בנתיב זה
+  };
 
   return (
     <div>
@@ -32,6 +51,10 @@ const GuestsList = () => {
               <strong>{guest.name}</strong><br />
               <em>{guest.mail}</em><br />
               <em>{guest.gender}</em><br />
+              {/* כפתור עידכון */}
+              <button onClick={() => handleEditGuest(guest.id)}>עדכון אורח</button>
+              {/* כפתור מחיקה */}
+              <button onClick={() => handleDeleteGuest(guest.id)}>מחק אורח</button>
             </li>
           ))}
         </ul>
