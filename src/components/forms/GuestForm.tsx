@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";  // הוספנו את useParams
+import { useNavigate, useParams } from "react-router-dom";
 import guestService from "../../services/guestService.ts";
 import groupService from "../../services/groupService.ts";
 import { Gender, Group } from "../../types/types.ts";
@@ -8,107 +8,83 @@ import "../../styles/form.css";
 
 const GuestForm: React.FC = () => {
   const { userId } = useAuth();
-  const { groupName } = useParams<{ groupName: string }>(); // שליפת שם הקבוצה מה-URL
-  console.log("userId:", userId);
+  const { guestId } = useParams();
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [gender, setGender] = useState<Gender>(Gender.male);
-  const [group, setGroup] = useState(""); // קטגוריה נבחרת
-  const [categories, setCategories] = useState<Group[]>([]); // שמירת כל האובייקטים של הקבוצות
-  const [loading, setLoading] = useState(true); // לבדיקה אם הטעינה הושלמה
-  const navigate = useNavigate();
+  const [group, setGroup] = useState("");
+  const [categories, setCategories] = useState<Group[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      if (!userId) {
-        console.log("אין userId, לא ניתן לטעון קבוצות.");
-        return;
-      }
+      if (!userId) return;
       setLoading(true);
       try {
         const groups: Group[] = await groupService.getGroupsByOrganizerId(userId);
-        console.log("Groups fetched from API:", groups);
-
-        if (groups.length === 0) {
-          console.log("לא נמצאו קבוצות למשתמש הזה.");
-        }
-
         setCategories(groups);
-
-        // אם יש שם קבוצה ב-URL, נבחר את הקבוצה המתאימה
-        if (groupName) {
-          const selectedGroup = groups.find(g => g.name === groupName);
-          if (selectedGroup) {
-            setGroup(selectedGroup.name);
-          }
-        }
-
+        
       } catch (error) {
         console.error("שגיאה בטעינת הקבוצות", error);
       } finally {
         setLoading(false);
       }
     };
+    if (userId) fetchCategories();
+  }, [userId]);
 
-    if (userId) {
-      fetchCategories();
-    }
-  }, [userId, groupName]); // נוספה התלות ב-groupName
+  useEffect(() => {
+    const fetchGuest = async () => {
+      if (!guestId) return;
+      setLoading(true);
+      try {
+        const guest = await guestService.getGuest(Number(guestId));
+        setName(guest.name);
+        setMail(guest.mail);
+        setGender(guest.gender);
+        const selectedGroup = categories.find(g => g.id === guest.groupId);
+        if (selectedGroup) setGroup(selectedGroup.name);
+      } catch (error) {
+        console.error("שגיאה בטעינת פרטי האורח", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (guestId) fetchGuest();
+  }, [guestId, categories]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (!userId) {
-        console.log("אין userId, לא ניתן להוסיף אורח.");
-        return;
-      }
-
-      // מציאת ה-ID של הקבוצה שנבחרה
+      if (!userId) return;
       const selectedGroup = categories.find(g => g.name === group);
-      if (!selectedGroup) {
-        console.log("לא נמצאה קבוצה עם שם זה");
-        return;
+      if (!selectedGroup) return;
+
+      const guestData = { name, mail, gender, groupId: selectedGroup.id };
+      if (guestId) {
+        await guestService.updateGuest(Number(guestId), guestData);
+      } else {
+        await guestService.createGuest(guestData);
       }
-
-      // יצירת אורח חדש עם מזהה הקבוצה
-      const newGuest = { name, mail, gender, groupId: selectedGroup.id };
-      console.log("Sending guest data:", newGuest);
-
-      await guestService.createGuest(newGuest);
-
-// <<<<<<< HEAD
-//       navigate("/organizer-groups");
-// =======
-      alert("האורח נוסף בהצלחה!");
       navigate("/groups");
-
     } catch (error) {
-      console.error("שגיאה בהוספת אורח", error);
-      alert("הייתה בעיה בהוספת האורח");
+      console.error("שגיאה בשמירת האורח", error);
+      alert("הייתה בעיה בשמירת האורח");
     }
   };
 
   return (
     <div className="form-container">
-      <h2>הוספת אורח חדש</h2>
-      {loading && <p>טוען קטגוריות...</p>}
+      <h2>{guestId ? "עריכת אורח" : "הוספת אורח חדש"}</h2>
+      {loading && <p>טוען נתונים...</p>}
       <form onSubmit={handleSubmit}>
         <label>שם:</label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
 
         <label>אימייל:</label>
-        <input
-          type="email"
-          value={mail}
-          onChange={(e) => setMail(e.target.value)}
-          required
-        />
+        <input type="email" value={mail} onChange={(e) => setMail(e.target.value)} required />
 
         <label>מין:</label>
         <select value={gender} onChange={(e) => setGender(Number(e.target.value) as Gender)}>
@@ -117,22 +93,14 @@ const GuestForm: React.FC = () => {
         </select>
 
         <label>קטגוריה:</label>
-        <select
-          value={group}
-          onChange={(e) => setGroup(e.target.value)}
-          required
-        >
+        <select value={group} onChange={(e) => setGroup(e.target.value)} required>
           <option value="">בחר קטגוריה</option>
-          {categories.length > 0 ? (
-            categories.map((g) => (
-              <option key={g.id} value={g.name}>{g.name}</option>
-            ))
-          ) : (
-            <option disabled>לא נמצאו קטגוריות</option>
-          )}
+          {categories.map(g => (
+            <option key={g.id} value={g.name}>{g.name}</option>
+          ))}
         </select>
 
-        <button type="submit" disabled={categories.length === 0}>אישור</button>
+        <button type="submit" disabled={loading || categories.length === 0}>{guestId ? "עדכן" : "אישור"}</button>
       </form>
     </div>
   );

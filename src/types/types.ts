@@ -30,7 +30,7 @@ export enum Gender {
 
 // טיפוס עבור Guest
 export interface Guest {
-  id: string;
+  id: number;
   name: string;
   mail: string;
   gender: Gender;

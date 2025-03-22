@@ -15,7 +15,7 @@ const guestService = {
   },
 
   // Get guest by id
-  getGuest: async (id: string): Promise<Guest> => {
+  getGuest: async (id: number): Promise<Guest> => {
     const response: AxiosResponse<Guest> = await apiClient.get(`/Guest/${id}`);
     return response.data;
   },
@@ -26,14 +26,14 @@ const guestService = {
     return response.data;
   },
   // Update guest
-  updateGuest: async (id: string, guest: GuestUpdate): Promise<Guest> => {
+  updateGuest: async (id: number, guest: GuestUpdate): Promise<Guest> => {
     const response: AxiosResponse<Guest> = await apiClient.put(`/Guest/${id}`, guest);
     return response.data;
   },
 
   // Delete guest
-  deleteGuest: async (id: string): Promise<void> => {
-    await apiClient.delete(`/guests/${id}`);
+  deleteGuest: async (id: number): Promise<void> => {
+    await apiClient.delete(`/Guest/${id}`);
   },
 
   sendEmails: async (eventId: number, subject: string, body: string): Promise<void> => {

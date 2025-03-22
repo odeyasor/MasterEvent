@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import eventService from "../services/eventService.ts";
-import "../styles/NewEvent.css"; // נשתמש ב-CSS מותאם
+import '../styles/display.css'
 
 const EventsPage = () => {
   const navigate = useNavigate();

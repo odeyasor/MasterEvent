@@ -53,7 +53,6 @@ const AddGroupPage: React.FC = () => {
         await groupService.createGroup(newGroup);
         navigate("/groups")
       }
-      navigate("/"); // חזרה לעמוד הקבוצות
     } catch (error) {
       console.error("Error adding/updating group:", error);
       alert("שגיאה בהוספת או עדכון הקבוצה");

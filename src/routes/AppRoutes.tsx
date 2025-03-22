@@ -52,6 +52,9 @@ const AppRoutes = () => {
           <Route path="/groups" element={<GroupsPage />} />
           <Route path="/group-form" element={<GroupForm />} />
           <Route path="/add-guest/:groupName?" element={<GuestForm />} />
+          <Route path="/guest-form" element={<GuestForm />} />
+          <Route path="/guest-form/:guestId" element={<GuestForm />} />
+
         </Route>
 
         {/* ברירת מחדל - הפניה לעמוד ההתחברות */}

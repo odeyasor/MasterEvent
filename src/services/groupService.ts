@@ -34,7 +34,7 @@ const groupService = {
   },
 
   // Delete group
-  deleteGroup: async (id: string): Promise<void> => {
+  deleteGroup: async (id: number): Promise<void> => {
     await apiClient.delete(`/Group/${id}`);
   },
 
