@@ -80,7 +80,7 @@ const ConfirmedGuestsList = () => {
 
     if (genderFilter && String(guestInfo.gender) !== genderFilter) return false;
 
-    if (groupFilter && String(guest.group) !== groupFilter) return false;
+    if (groupFilter && String(guest.groupId) !== groupFilter) return false;
 
     if (searchTerm && !guestInfo.name.includes(searchTerm)) return false;
 

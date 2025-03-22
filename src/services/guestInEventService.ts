@@ -50,13 +50,14 @@ const guestInEventService = {
     return response.data;
   },
 
-  // סידור אורחים לשולחנות לפי eventId ומספר מקומות בשולחן
-  assignGuestsToTables: async (eventId: string, seatsPerTable: number): Promise<Record<number, GuestInEvent[]>> => {
+   // סידור אורחים לשולחנות לפי eventId ומספר מקומות בשולחן
+   assignGuestsToTables: async (eventId: number, seatsPerTable: number): Promise<Record<number, GuestInEvent[]>> => {
     const response: AxiosResponse<Record<number, GuestInEvent[]>> = await apiClient.get(
-      `/GuestInEvent/assignTables/${eventId}?seatsPerTable=${seatsPerTable}`
+      `/GuestInEvent/assign-tables?eventId=${eventId}&seatsPerTable=${seatsPerTable}`
     );
     return response.data;
   }
+
 };
 
 export default guestInEventService;

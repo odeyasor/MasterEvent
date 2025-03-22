@@ -45,7 +45,7 @@ const EditEventPage = () => {
             <button onClick={() => handleButtonClick(`/edit-event/${eventId}/send-invitations`)}>שלח הזמנות</button>
             <button onClick={() => handleButtonClick(`/edit-event/${eventId}/edit-details`)}>שינוי פרטי האירוע</button>
             <button onClick={() => handleButtonClick(`/edit-event/${eventId}/guests-list`)}>רשימת אורחים שאישרו הגעה</button>
-            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/arrange-tables`)}>סידור שולחנות</button>
+            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/arrange-tables/${eventId}`)}>סידור שולחנות</button>
           </div>
 
           {/* הצגת תמונת ההזמנה אם showInvitation הוא true */}

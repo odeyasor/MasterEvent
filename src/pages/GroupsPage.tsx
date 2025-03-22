@@ -32,7 +32,7 @@ const OrganizerGroupsPage: React.FC = () => {
     fetchGroups();
   }, [userId]);
 
-  const handleDeleteGroup = async (groupId: number) => {
+  const handleDeleteGroup = async (groupId: number) => { // הוספת טיפוס ל-groupId
     try {
       await groupService.deleteGroup(groupId);
       setGroups(groups.filter((group) => group.id !== groupId)); // עדכון רשימת הקבוצות
