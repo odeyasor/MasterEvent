@@ -77,7 +77,7 @@ const GuestForm: React.FC = () => {
       await guestService.createGuest(newGuest);
 
       alert("האורח נוסף בהצלחה!");
-      navigate("/organizer-groups");
+      navigate("/groups");
 
     } catch (error) {
       console.error("שגיאה בהוספת אורח", error);

@@ -35,7 +35,6 @@ const AddGroupPage: React.FC = () => {
 
   const handleAddOrUpdateGroup = async () => {
     if (!groupName.trim()) {
-      alert("יש להזין שם קבוצה!");
       return;
     }
 
@@ -43,16 +42,15 @@ const AddGroupPage: React.FC = () => {
       setLoading(true);
       if (existingGroup) {
         // עדכון קבוצה קיימת
-        await groupService.updateGroup(existingGroup.id.toString(), { 
-          name: groupName, 
-          organizerId: Number(userId) 
+        await groupService.updateGroup(existingGroup.id.toString(), {
+          name: groupName,
+          organizerId: Number(userId)
         });
-        alert("הקבוצה עודכנה בהצלחה!");
       } else {
         // יצירת קבוצה חדשה
         const newGroup: Group = { name: groupName, organizerId: Number(userId), id: 0 }; // נניח שה-ID ייווצר אוטומטית בשרת
         await groupService.createGroup(newGroup);
-        alert("הקבוצה נוספה בהצלחה!");
+        navigate("/groups")
       }
       navigate("/"); // חזרה לעמוד הקבוצות
     } catch (error) {
