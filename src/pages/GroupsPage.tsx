@@ -59,6 +59,7 @@ const GroupsPage: React.FC = () => {
 
   // פונקציה למחוק קבוצה
   const handleDeleteGroup = async (groupId: number) => {
+
     try {
       await groupService.deleteGroup(groupId);
       setGroups(groups.filter((group) => group.id !== groupId)); // עדכון רשימת הקבוצות

@@ -16,6 +16,7 @@ import SendInvitationsPage from "../pages/SendInvitationsPage.tsx";
 import ConfirmedGuestsList from "../pages/guestsInEventPage.tsx";
 import GroupsPage from "../pages/GroupsPage.tsx";
 import OKPage from "../pages/OKPage.tsx";
+import AssignGuestsToTablesPage from "../pages/Tabels.tsx"
 
 // טפסים
 import EventForm from "../components/forms/EventForm.tsx";
@@ -47,7 +48,7 @@ const AppRoutes = () => {
             <Route path="send-invitations" element={<SendInvitationsPage />} />
             <Route path="edit-details" element={<EventForm />} />
             <Route path="guests-list" element={<ConfirmedGuestsList />} />
-            <Route path="arrange-tables" element={<div>סידור שולחנות</div>} />
+            <Route path="arrange-tables/:eventId" element={<AssignGuestsToTablesPage/>} />
           </Route>
           <Route path="/groups" element={<GroupsPage />} />
           <Route path="/group-form" element={<GroupForm />} />

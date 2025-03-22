@@ -3,6 +3,7 @@ import guestService from "../services/guestService.ts";
 import { Guest } from "../types/types.ts";
 import { FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import "../styles/display.css";
 
 interface GuestsListProps {
   groupId: number;
@@ -45,7 +46,7 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
   };
 
   return (
-    <div>
+    <div className="guests-list">
       <h3>אורחים בקבוצה</h3>
       {loading ? (
         <p>טוען אורחים...</p>
@@ -53,17 +54,14 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
         <p>אין אורחים בקבוצה זו</p>
       ) : (
         <div>
-          <div style={{ display: "flex", fontWeight: "bold", gap: "20px" }}>
+          <div className="guest-row guest-header">
             <span>שם</span>
             <span>מייל</span>
-            <span>מין</span>
+            <span>מגדר</span>
             <span>פעולות</span>
           </div>
           {guests.map((guest) => (
-            <div
-              key={guest.id}
-              style={{ display: "flex", alignItems: "center", gap: "20px", marginTop: "10px" }}
-            >
+            <div key={guest.id} className="guest-row">
               <span>{guest.name}</span>
               <span>{guest.mail}</span>
               <span>{guest.gender}</span>
@@ -77,9 +75,7 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
               </span>
             </div>
           ))}
-          <button onClick={() => navigate("/guest-form/new")} style={{ marginTop: "10px" }}>
-            <FaPlus /> הוספת אורח
-          </button>
+
         </div>
       )}
     </div>
