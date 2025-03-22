@@ -7,7 +7,7 @@ const Navbar: React.FC = () => {
   const location = useLocation(); // מקבלים את המיקום הנוכחי של הדף
   
   // בודקים אם מדובר בנתיב של כניסה או הרשמה
-  if (location.pathname === '/login' || location.pathname === '/register') {
+  if (location.pathname === '/login' || location.pathname === '/register'||location.pathname === '/ok') {
     return null; // אם זה עמוד כניסה או הרשמה, לא מציגים את הניווט
   }
 

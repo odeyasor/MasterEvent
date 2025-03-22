@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import groupService from "../../services/groupService.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
 import { Group } from "../../types/types.ts"; // ייבוא הממשק
+import "../../styles/form.css";
 
 const AddGroupPage: React.FC = () => {
   const [groupName, setGroupName] = useState<string>("");
@@ -35,7 +36,6 @@ const AddGroupPage: React.FC = () => {
 
   const handleAddOrUpdateGroup = async () => {
     if (!groupName.trim()) {
-      alert("יש להזין שם קבוצה!");
       return;
     }
 
@@ -43,15 +43,15 @@ const AddGroupPage: React.FC = () => {
       setLoading(true);
       if (existingGroup) {
         // עדכון קבוצה קיימת
-        await groupService.updateGroup(existingGroup.id.toString(), { 
-          name: groupName, 
-          organizerId: Number(userId) 
+        await groupService.updateGroup(existingGroup.id.toString(), {
+          name: groupName,
+          organizerId: Number(userId)
         });
-        alert("הקבוצה עודכנה בהצלחה!");
       } else {
         // יצירת קבוצה חדשה
         const newGroup: Group = { name: groupName, organizerId: Number(userId), id: 0 }; // נניח שה-ID ייווצר אוטומטית בשרת
         await groupService.createGroup(newGroup);
+        navigate("/groups")
       }
       navigate("/"); // חזרה לעמוד הקבוצות
     } catch (error) {
@@ -63,7 +63,7 @@ const AddGroupPage: React.FC = () => {
   };
 
   return (
-    <div className="add-group-page">
+    <div className="form-container">
       <h1>{existingGroup ? "עדכון קבוצה" : "הוספת קבוצה חדשה"}</h1>
       <input
         type="text"

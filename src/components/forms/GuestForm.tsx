@@ -4,6 +4,7 @@ import guestService from "../../services/guestService.ts";
 import groupService from "../../services/groupService.ts";
 import { Gender, Group } from "../../types/types.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
+import "../../styles/form.css";
 
 const GuestForm: React.FC = () => {
   const { userId } = useAuth();
@@ -76,7 +77,11 @@ const GuestForm: React.FC = () => {
 
       await guestService.createGuest(newGuest);
 
-      navigate("/organizer-groups");
+// <<<<<<< HEAD
+//       navigate("/organizer-groups");
+// =======
+      alert("האורח נוסף בהצלחה!");
+      navigate("/groups");
 
     } catch (error) {
       console.error("שגיאה בהוספת אורח", error);
@@ -85,7 +90,7 @@ const GuestForm: React.FC = () => {
   };
 
   return (
-    <div className="guest-container">
+    <div className="form-container">
       <h2>הוספת אורח חדש</h2>
       {loading && <p>טוען קטגוריות...</p>}
       <form onSubmit={handleSubmit}>

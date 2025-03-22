@@ -4,7 +4,7 @@ import eventService from "../../services/eventService.ts";
 import organizerService from "../../services/organizerService.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
 import { Event } from "../../types/types.ts";
-import "../../styles/NewEvent.css";
+import "../../styles/form.css";
 
 const EventForm: React.FC = () => {
   const { userId } = useAuth();
@@ -94,7 +94,7 @@ const EventForm: React.FC = () => {
   };
   
   return (
-    <div className="event-container">
+    <div className="form-container">
       <h2>{isEdit ? "עדכן אירוע" : "צור אירוע"}</h2>
 
       <form onSubmit={handleSubmit}>
