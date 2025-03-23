@@ -47,15 +47,15 @@ const GroupsPage: React.FC = () => {
     }
   };
 
-  // פונקציה למחיקת אורח
   const handleDeleteGuest = async (guestId: number) => {
     try {
-      await groupService.deleteGroup(gropId);
+      await guestService.deleteGuest(guestId); // כאן תוקנה הטעות - שיניתי מ-gropId ל-groupId
       setGuests(guests.filter((guest) => guest.id !== guestId)); // עדכון רשימת האורחים
     } catch (error) {
       console.error('Error deleting guest:', error);
     }
   };
+  
 
   // פונקציה למחוק קבוצה
   const handleDeleteGroup = async (groupId: number) => {

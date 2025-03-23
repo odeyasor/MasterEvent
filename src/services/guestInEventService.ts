@@ -50,13 +50,22 @@ const guestInEventService = {
     return response.data;
   },
 
-   // סידור אורחים לשולחנות לפי eventId ומספר מקומות בשולחן
-   assignGuestsToTables: async (eventId: number, seatsPerTable: number): Promise<Record<number, GuestInEvent[]>> => {
-    const response: AxiosResponse<Record<number, GuestInEvent[]>> = await apiClient.get(
-      `/GuestInEvent/assign-tables?eventId=${eventId}&seatsPerTable=${seatsPerTable}`
-    );
-    return response.data;
-  }
+  // סידור אורחים לשולחנות עם הפרדה מגדרית
+assignGuestsToTablesByGender: async (eventId: number, seatsPerTable: number): Promise<Record<number, GuestInEvent[]>> => {
+  const response: AxiosResponse<Record<number, GuestInEvent[]>> = await apiClient.get(
+    `/GuestInEvent/assign-tables-by-gender?eventId=${eventId}&seatsPerTable=${seatsPerTable}`
+  );
+  return response.data;
+},
+
+// סידור אורחים לשולחנות בלי הפרדה מגדרית
+assignGuestsToTablesWithoutGenderSeparation: async (eventId: number, seatsPerTable: number): Promise<Record<number, GuestInEvent[]>> => {
+  const response: AxiosResponse<Record<number, GuestInEvent[]>> = await apiClient.get(
+    `/GuestInEvent/assign-tables-without-gender-separation?eventId=${eventId}&seatsPerTable=${seatsPerTable}`
+  );
+  return response.data;
+}
+
 
 };
 

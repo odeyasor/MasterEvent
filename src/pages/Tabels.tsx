@@ -4,6 +4,7 @@ import guestInEventService from '../services/guestInEventService.ts'; // הוס�
 import seatingService from '../services/seatingService.ts'; // הוספתי את הסיומת .ts
 import guestService from '../services/guestService.ts'; // הוספתי את הסיומת .ts
 import { GuestInEvent } from '../types/types';
+import eventService from '../services/eventService.ts';
 
 interface SeatingData {
   tableId: number;
@@ -26,31 +27,35 @@ const AssignGuestsToTablesPage = () => {
   // פונקציה להקצאת אורחים לשולחנות
   const fetchGuestsAndAssignTables = async () => {
     if (!eventId) {
-      console.error('מזהה האירוע חסר'); // אם לא קיבלנו מזהה אירוע, הדפסת שגיאה
+      console.error('מזהה האירוע חסר');
       return;
     }
+  
     try {
-      console.log('מתחילים להוריד אורחים ולהקצות אותם לשולחנות...'); // הדפסת הודעה שמתחילים את התהליך
-      
+      const eventDetails = await eventService.getEvent(eventId);
+      const separation = eventDetails.seperation;
+      console.log('סוג ההפרדה באירוע:', separation);
+  
       if (seatsPerTable <= 0) {
-        console.log('כמות הכיסאות בשולחן אינה תקינה:', seatsPerTable); // אם כמות הכיסאות לא תקינה, הדפסת הודעה
+        console.log('כמות הכיסאות בשולחן אינה תקינה:', seatsPerTable);
         return;
       }
-
-      // הקצאת אורחים לשולחנות לפי seatsPerTable
-      const assignedTables = await guestInEventService.assignGuestsToTables(Number(eventId), seatsPerTable);
-      console.log('האורחים שהוקצו לשולחנות:', assignedTables); // הדפסת האורחים שהוקצו לשולחנות
-
-      // סידור הנתונים עבור כל שולחן
+  
+      // קביעת הפונקציה המתאימה לפי סוג ההפרדה
+      const assignedTables = separation
+        ? await guestInEventService.assignGuestsToTablesByGender(Number(eventId), seatsPerTable)
+        : await guestInEventService.assignGuestsToTablesWithoutGenderSeparation(Number(eventId), seatsPerTable);
+  
+      console.log('האורחים שהוקצו לשולחנות:', assignedTables);
+  
+      // סידור הנתונים
       const seatingAssignments = Object.entries(assignedTables).map(([tableId, guests]) => ({
         tableId: parseInt(tableId),
-        seats: guests
+        seats: guests,
       }));
-
-      console.log('הקצאת הישיבה לשולחנות:', seatingAssignments); // הדפסת סדר הישיבה
+  
       setSeatings(seatingAssignments);
-
-      // יצירת ישיבה לכל שולחן
+  
       const seatingData: SeatingCreate[] = seatingAssignments.flatMap((tableData) =>
         tableData.seats.map((guest, index) => ({
           eventId: String(eventId),
@@ -59,43 +64,37 @@ const AssignGuestsToTablesPage = () => {
           seat: index + 1,
         }))
       );
-      
-      console.log('נתוני הישיבה לשליחה:', seatingData); // הדפסת נתוני הישיבה לפני שליחה לסרוויס
-      
-      // שליחת הנתונים לסרוויס כדי לשמור את הישיבה
+  
       if (seatingData.length > 0) {
         for (const seating of seatingData) {
           try {
-            console.log('שולחים מקום ישיבה:', seating); // הדפסת מקום ישיבה שנשלח
-            await seatingService.createSeating(seating); // שולחים מקום ישיבה אחד בכל פעם
+            console.log('שולחים מקום ישיבה:', seating);
+            await seatingService.createSeating(seating);
           } catch (error) {
-            console.error('שגיאה בשליחת מקום ישיבה:', seating, error); // אם יש שגיאה בהשליחה
+            console.error('שגיאה בשליחת מקום ישיבה:', seating, error);
           }
         }
       }
-      
-      
+  
       // עדכון שמות האורחים
       const guestNames: { [key: string]: string } = {};
       for (const tableData of seatingAssignments) {
         for (const guest of tableData.seats) {
           try {
-            // קבלת פרטי האורח על פי מזהה האורח
-            const guestInfo = await guestService.getGuest(guest.guestId);
-            console.log('פרטי האורח:', guestInfo); // הדפסת פרטי האורח
-            guestNames[guest.id] = guestInfo.name; // נניח שהשם נמצא במאפיין `name`
+            const guestInfo = await guestService.getGuest(Number(guest.guestId));
+            guestNames[guest.id] = guestInfo.name;
           } catch (error) {
-            console.error(`שגיאה בהבאת פרטי האורח עם מזהה ${guest.id}:`, error); // אם יש שגיאה בהבאת פרטי אורח, הדפסת הודעה
+            console.error(`שגיאה בהבאת פרטי האורח עם מזהה ${guest.id}:`, error);
           }
         }
       }
-
-      console.log('שמות האורחים:', guestNames); // הדפסת שמות האורחים
-      setGuests(guestNames); // עדכון שמות האורחים במצב
+  
+      setGuests(guestNames);
     } catch (error) {
-      console.error('שגיאה בהקצאת אורחים לשולחנות:', error); // הדפסת שגיאה אם משהו משתבש בתהליך
+      console.error('שגיאה בהקצאת אורחים לשולחנות:', error);
     }
   };
+  
 
   // שימוש ב- useEffect כדי להפעיל את הפונקציה ברגע שהמזהה אירוע או כמות הכיסאות משתנים
   useEffect(() => {
