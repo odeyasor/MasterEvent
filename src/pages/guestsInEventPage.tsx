@@ -28,7 +28,7 @@ const ConfirmedGuestsList = () => {
 
         const guestDetailsData: { [key: string]: Guest } = {};
         for (const guest of confirmedGuests) {
-          const guestData = await guestService.getGuest(guest.guestId);
+          const guestData = await guestService.getGuest(Number(guest.guestId));
           guestDetailsData[guest.guestId] = guestData;
         }
         setGuestDetails(guestDetailsData);
