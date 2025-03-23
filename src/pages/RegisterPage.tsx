@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/login-and-register.css";
+import "../styles/form.css";
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/apiClient.ts';
 import axios from 'axios';
@@ -36,29 +36,29 @@ const RegisterPage = () => {
     setSuccess(false);
     setEmailExists(false);
     setLoading(true);
-
+  
     try {
       const response = await apiClient.post('/Organizer', {
         name: organizer.name,
         mail: organizer.mail,
         password: organizer.password
       });
-      
-      // If registration is successful, attempt auto-login
+  
+      // אם ההרשמה הצליחה, ננסה לבצע התחברות אוטומטית
       const loginResponse = await apiClient.post('/Login', { 
         mail: organizer.mail, 
         pass: organizer.password 
       });
-      
+  
       if (loginResponse.data) {
         const token = loginResponse.data;
         const decoded = decodeToken(token);
-        
+  
         if (decoded) {
-          // Store the token in localStorage
+          // שמור את הטוקן ב-localStorage
           localStorage.setItem('token', token);
-          
-          // Update the auth context
+  
+          // עדכן את הקשר האותנטיקציה
           login(
             token, 
             decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'], 
@@ -66,36 +66,26 @@ const RegisterPage = () => {
           );
         }
       }
-
+  
       setSuccess(true);
       setTimeout(() => {
         navigate('/Home');
       }, 2000);
-    } catch (err) {
-      console.error("Error registering organizer:", err);
-      
-      if (axios.isAxiosError(err) && err.response) {
-        console.log("Response error data:", err.response.data);
-        
-        if (err.response.status === 400 && typeof err.response.data === 'string' && 
-            err.response.data.includes("Email already exists")) {
-          setEmailExists(true);
-          setError("האימייל שהוזן כבר קיים. להתחברות לחץ ");
-        } else {
-          setError(err.response.data?.message || typeof err.response.data === 'string' 
-            ? err.response.data 
-            : "שגיאה ביצירת משתמש. נסה שוב.");
-        }
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        setError(error.response.data.message); // מציג את השגיאה שהשרת החזיר
       } else {
-        setError("שגיאת רשת או שהשרת אינו מגיב.");
+        setError("שגיאה לא צפויה, נסי שוב.");
       }
     } finally {
       setLoading(false);
     }
   };
+  
+  
 
   return (
-    <div className="register-container">
+    <div className="form-container">
       <div className="register-box">
         <h2 className="register-title">הרשמה</h2>
         {success && <div className="success-message">הרשמה בוצעה בהצלחה! מעביר לדף הראשי...</div>}

@@ -96,8 +96,8 @@ const EventForm: React.FC = () => {
   return (
     <div className="form-container">
       <h2>{isEdit ? "עדכן אירוע" : "צור אירוע"}</h2>
-
-      <form onSubmit={handleSubmit}>
+  
+      <form onSubmit={handleSubmit} className="neon-form">
         <label>שם האירוע:</label>
         <input
           type="text"
@@ -105,7 +105,7 @@ const EventForm: React.FC = () => {
           onChange={(e) => setEvent({ ...event, eventName: e.target.value })}
           required
         />
-
+  
         <label>תאריך ושעה:</label>
         <input
           type="datetime-local"
@@ -113,7 +113,7 @@ const EventForm: React.FC = () => {
           onChange={(e) => setEvent({ ...event, eventDate: e.target.value })}
           required
         />
-
+  
         <label>כתובת:</label>
         <input
           type="text"
@@ -121,14 +121,14 @@ const EventForm: React.FC = () => {
           onChange={(e) => setEvent({ ...event, address: e.target.value })}
           required
         />
-
+  
         <label>פרטים נוספים:</label>
         <textarea
           value={event.details || ""}
           onChange={(e) => setEvent({ ...event, details: e.target.value })}
           rows={3}
         ></textarea>
-
+  
         <label>
           <input
             type="checkbox"
@@ -137,16 +137,16 @@ const EventForm: React.FC = () => {
           />
           האם יש הפרדה?
         </label>
-
+  
         <label>העלאת תמונה (הזמנה):</label>
         <input type="file" accept="image/*" onChange={(e) => setImage(e.target.files?.[0] || null)} />
-
+  
         {image && <p>✔ תמונה נבחרה: {image.name}</p>}
-
+  
         <button type="submit">{isEdit ? "עדכן אירוע" : "צור אירוע"}</button>
       </form>
     </div>
   );
-};
+};  
 
 export default EventForm;

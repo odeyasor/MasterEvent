@@ -13,10 +13,11 @@ const GuestForm: React.FC = () => {
 
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
-  const [gender, setGender] = useState<Gender>(Gender.male);
+  const [gender, setGender] = useState<Gender | undefined>(undefined);
   const [group, setGroup] = useState("");
   const [categories, setCategories] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -25,9 +26,8 @@ const GuestForm: React.FC = () => {
       try {
         const groups: Group[] = await groupService.getGroupsByOrganizerId(userId);
         setCategories(groups);
-        
       } catch (error) {
-        console.error("שגיאה בטעינת הקבוצות", error);
+        setErrorMessage("שגיאה בטעינת הקבוצות.");
       } finally {
         setLoading(false);
       }
@@ -47,7 +47,7 @@ const GuestForm: React.FC = () => {
         const selectedGroup = categories.find(g => g.id === guest.groupId);
         if (selectedGroup) setGroup(selectedGroup.name);
       } catch (error) {
-        console.error("שגיאה בטעינת פרטי האורח", error);
+        setErrorMessage("שגיאה בטעינת פרטי האורח.");
       } finally {
         setLoading(false);
       }
@@ -57,39 +57,53 @@ const GuestForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
+  
     try {
-      if (!userId) return;
       const selectedGroup = categories.find(g => g.name === group);
-      if (!selectedGroup) return;
-
+      if (!selectedGroup) {
+        setErrorMessage("שגיאה: נא לבחור קטגוריה תקפה.");
+        return;
+      }
+  
       const guestData = { name, mail, gender, groupId: selectedGroup.id };
+  
       if (guestId) {
         await guestService.updateGuest(Number(guestId), guestData);
       } else {
         await guestService.createGuest(guestData);
       }
+  
       navigate("/groups");
-    } catch (error) {
-      console.error("שגיאה בשמירת האורח", error);
-      alert("הייתה בעיה בשמירת האורח");
+    } catch (error: any) {
+      if (error.response && error.response.status === 400) {
+        setErrorMessage(error.response.data); // מציג את השגיאה שהשרת החזיר
+      } else {
+        setErrorMessage("שגיאה לא צפויה, נסי שוב.");
+      }
     }
   };
+  
+  
 
   return (
     <div className="form-container">
       <h2>{guestId ? "עריכת אורח" : "הוספת אורח חדש"}</h2>
       {loading && <p>טוען נתונים...</p>}
-      <form onSubmit={handleSubmit}>
+
+
+      <form onSubmit={handleSubmit} className="neon-form">
         <label>שם:</label>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
 
         <label>אימייל:</label>
         <input type="email" value={mail} onChange={(e) => setMail(e.target.value)} required />
 
-        <label>מין:</label>
-        <select value={gender} onChange={(e) => setGender(Number(e.target.value) as Gender)}>
-          <option value={Gender.male}>זכר</option>
-          <option value={Gender.female}>נקבה</option>
+        <label>מגדר:</label>
+        <select value={gender} onChange={(e) => setGender(Number(e.target.value) as Gender)} required>
+          <option value="">בחר מגדר</option>
+          <option value={Gender.male}>גבר</option>
+          <option value={Gender.female}>אישה</option>
         </select>
 
         <label>קטגוריה:</label>
@@ -99,8 +113,11 @@ const GuestForm: React.FC = () => {
             <option key={g.id} value={g.name}>{g.name}</option>
           ))}
         </select>
+        {errorMessage && <p className="error-message">{errorMessage}</p>} {/* הצגת הודעת שגיאה */}
 
-        <button type="submit" disabled={loading || categories.length === 0}>{guestId ? "עדכן" : "אישור"}</button>
+        <button type="submit" disabled={loading || categories.length === 0}>
+          {guestId ? "עדכן" : "אישור"}
+        </button>
       </form>
     </div>
   );

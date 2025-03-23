@@ -64,18 +64,24 @@ const AddGroupPage: React.FC = () => {
   return (
     <div className="form-container">
       <h1>{existingGroup ? "עדכון קבוצה" : "הוספת קבוצה חדשה"}</h1>
-      <input
-        type="text"
-        placeholder="שם הקבוצה"
-        value={groupName}
-        onChange={(e) => setGroupName(e.target.value)}
-      />
-      <button onClick={handleAddOrUpdateGroup} disabled={loading}>
-        {loading ? "שומר..." : existingGroup ? "עדכן קבוצה" : "הוסף קבוצה"}
-      </button>
-      <button onClick={() => navigate("/")}>ביטול</button>
+      
+      <form className="neon-form">
+        <label>שם הקבוצה:</label>
+        <input
+          type="text"
+          placeholder="שם הקבוצה"
+          value={groupName}
+          onChange={(e) => setGroupName(e.target.value)}
+        />
+  
+        <button onClick={handleAddOrUpdateGroup} disabled={loading}>
+          {loading ? "שומר..." : existingGroup ? "עדכן קבוצה" : "הוסף קבוצה"}
+        </button>
+        <button onClick={() => navigate("/")}>ביטול</button>
+      </form>
     </div>
   );
+  
 };
 
 export default AddGroupPage;

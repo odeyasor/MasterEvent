@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import guestInEventService from "../services/guestInEventService.ts";
 import guestService from "../services/guestService.ts";
 import groupService from "../services/groupService.ts";
-import { GuestInEvent, Guest } from "../types/types";
+import { GuestInEvent, Guest } from "../types/types.ts";
 import React from "react";
 import { useAuth } from "../context/AuthContext.tsx";
 import organizerService from "../services/organizerService.ts";

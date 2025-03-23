@@ -41,7 +41,7 @@ const EditEventPage = () => {
 
           {/* כפתורים */}
           <div>
-            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/choose-guests`)}>הזמן אורחים</button>
+            <button onClick={() => handleButtonClick(`/edit-event/${eventId}/choose-guests`)}>הוסף אורחים</button>
             <button onClick={() => handleButtonClick(`/edit-event/${eventId}/send-invitations`)}>שלח הזמנות</button>
             <button onClick={() => handleButtonClick(`/edit-event/${eventId}/edit-details`)}>שינוי פרטי האירוע</button>
             <button onClick={() => handleButtonClick(`/edit-event/${eventId}/guests-list`)}>רשימת אורחים שאישרו הגעה</button>

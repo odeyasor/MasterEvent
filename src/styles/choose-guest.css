@@ -1,0 +1,30 @@
+יישור כל התוכן לימין
+.group-container {
+    text-align: right;
+    margin-bottom: 20px;
+    padding-right: 20px;
+  }
+  
+  /* קבוצה - הצ'קבוקס יהיה מימין והכיתוב לידו */
+  .group-title {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row-reverse; /* הופך את הסדר כך שהצ'קבוקס יהיה מימין */
+    gap: 5px; /* מרווח קטן בין הצ'קבוקס לכיתוב */
+  }
+  
+  /* רשימת אורחים */
+  .guest-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* אורח - צ'קבוקס מימין והכיתוב לידו */
+  .guest-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row-reverse; /* הופך את הסדר כך שהצ'קבוקס יהיה מימין */
+    gap: 5px; /* רווח קטן בין הצ'קבוקס לשם האורח */
+  }

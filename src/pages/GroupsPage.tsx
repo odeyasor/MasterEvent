@@ -4,7 +4,7 @@ import groupService from '../services/groupService.ts';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useNavigate } from 'react-router-dom';
 import GuestsList from './GuestsList.tsx';
-import { FaEdit, FaTrashAlt, FaArrowDown, FaUserPlus, FaUserMinus } from 'react-icons/fa'; // ייבוא סמלים
+import { FaEdit, FaTrashAlt, FaArrowDown, FaUserPlus, FaUserMinus, FaPlusCircle, FaPlus } from 'react-icons/fa'; // ייבוא סמלים
 import '../styles/display.css'
 import guestService from '../services/guestService.ts';
 
@@ -86,9 +86,11 @@ const GroupsPage: React.FC = () => {
   return (
     <div className="organizer-groups-page">
       <h1>הקבוצות שלי</h1>
-
-      <button onClick={() => navigate('/group-form')}>הוסף קבוצה חדשה</button>
-
+  
+      <button onClick={() => navigate('/group-form')}>
+        <FaPlus /> {/* סמל להוספת קבוצה חדשה */}
+      </button>
+  
       {loading ? (
         <p>טוען קבוצות...</p>
       ) : (
@@ -109,7 +111,7 @@ const GroupsPage: React.FC = () => {
                   </button>
                 </div>
               </div>
-
+  
               {/* הצגת רשימת האורחים רק אם הקבוצה נבחרה */}
               {selectedGroupId === group.id && (
                 <div>
@@ -123,7 +125,7 @@ const GroupsPage: React.FC = () => {
                     />
                   )}
                   {/* כפתור הוספת אורח */}
-                  <button onClick={()=>navigate("/guest-form") }>
+                  <button onClick={() => navigate("/guest-form")}>
                     <FaUserPlus /> הוסף אורח
                   </button>
                 </div>
@@ -135,5 +137,4 @@ const GroupsPage: React.FC = () => {
     </div>
   );
 };
-
-export default GroupsPage;
+export default GroupsPage

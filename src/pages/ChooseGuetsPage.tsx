@@ -7,11 +7,12 @@ import React from "react";
 import { UploadGuestsForm, uploadGuestsFile } from "../components/UploadGuestsForm.tsx";
 import { downloadExcelTemplate } from "../utils/fileUtils.ts";
 import { useNavigate, useParams } from "react-router-dom";
-
+import '../styles/choose-guest.css'
 const ChooseGuestsPage = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [guestsByGroup, setGuestsByGroup] = useState<{ [key: string]: Guest[] }>({});
   const [selectedGuests, setSelectedGuests] = useState<{ [key: string]: boolean }>({});
+  const [groupSelections, setGroupSelections] = useState<{ [key: string]: boolean }>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -53,6 +54,22 @@ const ChooseGuestsPage = () => {
     setSelectedGuests((prev) => ({ ...prev, [guestId]: !prev[guestId] }));
   };
 
+  const toggleGroupSelection = (groupId: string) => {
+    const newSelection = !groupSelections[groupId];
+    setGroupSelections((prev) => ({
+      ...prev,
+      [groupId]: newSelection,
+    }));
+
+    const guestsInGroup = guestsByGroup[groupId] || [];
+    const updatedSelectedGuests = guestsInGroup.reduce((acc, guest) => {
+      acc[guest.id] = newSelection;
+      return acc;
+    }, {} as { [key: string]: boolean });
+
+    setSelectedGuests((prev) => ({ ...prev, ...updatedSelectedGuests }));
+  };
+
   const confirmGuests = async () => {
     if (!eventId) {
       alert("Event ID is required");
@@ -81,25 +98,28 @@ const ChooseGuestsPage = () => {
 
   return (
     <div>
-{/* <<<<<<< HEAD
-      <h2>האורחים שלי</h2>
-      {guests.length === 0 ? (
-        <p>אין לך אורחים עדיין</p>
-======= */}
       <h2>בחירת אורחים</h2>
       {loading ? (
         <p>טוען...</p>
       ) : error ? (
         <p>{error}</p>
-// >>>>>>> c9df9e9d6978a5b5676c0e8ea657fe33dcd53cf1
+      ) : groups.length === 0 || Object.keys(guestsByGroup).every(groupId => guestsByGroup[groupId].length === 0) ? (
+        <p>אין לך אורחים עדיין</p>
       ) : (
         groups.map((group) => (
-          <div key={group.id} style={{ marginBottom: "20px" }}>
-            <h3>{group.name}</h3>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+          <div key={group.id} className="group-container">
+            <h3 className="group-title">
+              <input
+                type="checkbox"
+                checked={!!groupSelections[group.id]}
+                onChange={() => toggleGroupSelection(group.id)}
+              />
+              {group.name}
+            </h3>
+            <ul className="guest-list">
               {guestsByGroup[group.id]?.length ? (
                 guestsByGroup[group.id].map((guest) => (
-                  <li key={guest.id} style={{ display: "flex", alignItems: "center" }}>
+                  <li key={guest.id} className="guest-item">
                     <input
                       type="checkbox"
                       checked={!!selectedGuests[guest.id]}
@@ -115,13 +135,13 @@ const ChooseGuestsPage = () => {
           </div>
         ))
       )}
-<UploadGuestsForm onFileUpload={uploadGuestsFile} />
-<button onClick={downloadExcelTemplate}>הורד תבנית אקסל</button>
-
-      <button onClick={confirmGuests}>הזמן</button>
-      <button onClick={() => navigate("/add-guest")}>אורח חדש</button>
+      <UploadGuestsForm onFileUpload={uploadGuestsFile} />
+      <button onClick={downloadExcelTemplate}>הורד תבנית אקסל</button>
+      <button onClick={confirmGuests}>הוספה לאירוע</button>
+      {/* <button onClick={() => navigate("/add-guest")}>אורח חדש</button> */}
     </div>
   );
+  
 };
 
 export default ChooseGuestsPage;
