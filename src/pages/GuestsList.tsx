@@ -45,6 +45,18 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
     navigate(`/guest-form/${guestId}`);
   };
 
+  // פונקציה להמיר את המגדר למילים
+  const genderText = (gender: number): string => {
+    switch (gender) {
+      case 0:
+        return "גבר";
+      case 1:
+        return "אישה";
+      default:
+        return "לא צוין";
+    }
+  };
+
   return (
     <div className="guests-list">
       <h3>אורחים בקבוצה</h3>
@@ -64,7 +76,7 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
             <div key={guest.id} className="guest-row">
               <span>{guest.name}</span>
               <span>{guest.mail}</span>
-              <span>{guest.gender}</span>
+              <span>{genderText(guest.gender)}</span> {/* המרה למילים */}
               <span>
                 <button onClick={() => handleEditGuest(guest.id)}>
                   <FaEdit />
@@ -75,7 +87,6 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
               </span>
             </div>
           ))}
-
         </div>
       )}
     </div>

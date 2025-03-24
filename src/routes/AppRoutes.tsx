@@ -13,7 +13,7 @@ import EventsPage from "../pages/EventsPage.tsx";
 import EventDetails from "../pages/EventDetails.tsx";
 import ChooseGuestsPage from "../pages/ChooseGuetsPage.tsx";
 import SendInvitationsPage from "../pages/SendInvitationsPage.tsx";
-import ConfirmedGuestsList from "../pages/guestsInEventPage.tsx";
+import ConfirmedGuestsList from "../pages/GuestsInEventPage.tsx";
 import GroupsPage from "../pages/GroupsPage.tsx";
 import OKPage from "../pages/OKPage.tsx";
 import AssignGuestsToTablesPage from "../pages/Tabels.tsx"
@@ -22,6 +22,7 @@ import AssignGuestsToTablesPage from "../pages/Tabels.tsx"
 import EventForm from "../components/forms/EventForm.tsx";
 import GroupForm from "../components/forms/GroupForm.tsx";
 import GuestForm from "../components/forms/GuestForm.tsx";
+import OrganizerForm from "../components/forms/OrganizerForm.tsx";
 
 const AppRoutes = () => {
   return (
@@ -38,10 +39,11 @@ const AppRoutes = () => {
 
         {/* עמודים מוגנים */}
         <Route element={<ProtectedRoute />}>
+
           <Route path="/home" element={<Home />} />
-          <Route path="/groups" element={<GroupsPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/event-form" element={<EventForm />} />
+          <Route path="/organizer-form/:organizerId" element={<OrganizerForm />} />
           <Route path="/event-details/:eventId" element={<EventDetails />} />
           <Route path="/edit-event/:eventId" element={<EventDetails />}>
             <Route path="choose-guests" element={<ChooseGuestsPage />} />
@@ -52,8 +54,9 @@ const AppRoutes = () => {
           </Route>
           <Route path="/groups" element={<GroupsPage />} />
           <Route path="/group-form" element={<GroupForm />} />
+          <Route path="/group-form/:groupId" element={<GroupForm />} />
           <Route path="/add-guest/:groupName?" element={<GuestForm />} />
-          <Route path="/guest-form" element={<GuestForm />} />
+          <Route path="/guest-form/:groupId" element={<GuestForm />} />
           <Route path="/guest-form/:guestId" element={<GuestForm />} />
 
         </Route>

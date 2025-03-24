@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import eventService from "../services/eventService.ts";
 import '../styles/display.css'
+import { FaCalendarAlt, FaClock, FaEdit, FaMapMarkerAlt, FaParagraph, FaPlus, FaRss, FaSearch, FaTrashAlt, FaUser } from "react-icons/fa";
 
 const EventsPage = () => {
   const navigate = useNavigate();
@@ -18,9 +19,8 @@ const EventsPage = () => {
 
       try {
         const userEvents = await eventService.getEventsByOrganizerId(userId);
-        if (userEvents.length === 0) {
-          setError("אין לך אירועים כרגע");
-        } else {
+        if (userEvents.length > 0) {
+
           setEvents(userEvents);
         }
       } catch (err) {
@@ -49,35 +49,23 @@ const EventsPage = () => {
       <h1>האירועים שלי</h1>
       {error && <p className="error-message">{error}</p>}
       <button className="dashboard-button" onClick={() => navigate('/event-form')}>
-          ➕ צור אירוע חדש
-        </button>
+        <FaPlus /> צור אירוע חדש
+      </button>
       <div className="events-grid">
         {events.map((event) => (
           <div key={event.id} className="event-card">
             <h3>{event.eventName}</h3>
-            <p>📅 {new Date(event.eventDate).toLocaleDateString()}</p>
-            <p>⏰ {new Date(event.eventDate).toLocaleTimeString()}</p>
-            <p>📍 {event.address}</p>
-            <p>{event.seperation}</p>
-            <p>{event.details}</p>
+            <p><FaCalendarAlt /> {new Date(event.eventDate).toLocaleDateString()}</p>
+            <p><FaClock /> {new Date(event.eventDate).toLocaleTimeString()}</p>
+            <p><FaMapMarkerAlt /> {event.address}</p>
+            <p>{event.seperation ? <><FaUser /> נפרד</> : null}</p> {/* אם seperation הוא true, יוצג אייקון */}
+            <p><FaParagraph /> {event.details}</p> {/* אייקון של טקסט או תיאור */}
             <div className="event-actions">
-              <button
-                className="update-btn"
-                onClick={() => navigate(`/event-details/${event.id}`)}
-              >
-                🔍 פרטים
+              <button className="edit-btn" onClick={() => navigate(`/edit-event/${event.id}`)}>
+                <FaEdit /> עריכה
               </button>
-              <button
-                className="edit-btn"
-                onClick={() => navigate(`/edit-event/${event.id}`)}
-              >
-                ✏️ עריכה
-              </button>
-              <button
-                className="delete-btn"
-                onClick={() => deleteEvent(event.id)}
-              >
-                🗑 מחק
+              <button className="delete-btn" onClick={() => deleteEvent(event.id)}>
+                <FaTrashAlt /> מחק
               </button>
             </div>
           </div>
@@ -86,5 +74,6 @@ const EventsPage = () => {
     </div>
   );
 };
+
 
 export default EventsPage;
