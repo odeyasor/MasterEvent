@@ -41,7 +41,6 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
 
           <Route path="/home" element={<Home />} />
-          <Route path="/groups" element={<GroupsPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/event-form" element={<EventForm />} />
           <Route path="/organizer-form/:organizerId" element={<OrganizerForm />} />
@@ -55,8 +54,9 @@ const AppRoutes = () => {
           </Route>
           <Route path="/groups" element={<GroupsPage />} />
           <Route path="/group-form" element={<GroupForm />} />
+          <Route path="/group-form/:groupId" element={<GroupForm />} />
           <Route path="/add-guest/:groupName?" element={<GuestForm />} />
-          <Route path="/guest-form" element={<GuestForm />} />
+          <Route path="/guest-form/:groupId" element={<GuestForm />} />
           <Route path="/guest-form/:guestId" element={<GuestForm />} />
 
         </Route>

@@ -19,9 +19,8 @@ const EventsPage = () => {
 
       try {
         const userEvents = await eventService.getEventsByOrganizerId(userId);
-        if (userEvents.length === 0) {
-          setError("אין לך אירועים כרגע");
-        } else {
+        if (userEvents.length > 0) {
+
           setEvents(userEvents);
         }
       } catch (err) {

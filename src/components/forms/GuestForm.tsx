@@ -8,13 +8,13 @@ import "../../styles/form.css";
 
 const GuestForm: React.FC = () => {
   const { userId } = useAuth();
-  const { guestId } = useParams();
+  const { guestId, groupId } = useParams(); // ← הוספתי קבלת groupId מהנתיב
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [gender, setGender] = useState<Gender | undefined>(undefined);
-  const [group, setGroup] = useState("");
+  const [group, setGroup] = useState(""); // ← נשמור את ה-id של הקבוצה, לא את ה-name!
   const [categories, setCategories] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -26,14 +26,20 @@ const GuestForm: React.FC = () => {
       try {
         const groups: Group[] = await groupService.getGroupsByOrganizerId(userId);
         setCategories(groups);
+
+        // אם זה אורח חדש ויש groupId בפרמס, נגדיר לו כברירת מחדל את הקבוצה
+        if (!guestId && groupId) {
+          const selectedGroup = groups.find(g => g.id === Number(groupId));
+          if (selectedGroup) setGroup(String(selectedGroup.id));
+        }
       } catch (error) {
         setErrorMessage("שגיאה בטעינת הקבוצות.");
       } finally {
         setLoading(false);
       }
     };
-    if (userId) fetchCategories();
-  }, [userId]);
+    fetchCategories();
+  }, [userId, groupId, guestId]);
 
   useEffect(() => {
     const fetchGuest = async () => {
@@ -44,8 +50,7 @@ const GuestForm: React.FC = () => {
         setName(guest.name);
         setMail(guest.mail);
         setGender(guest.gender);
-        const selectedGroup = categories.find(g => g.id === guest.groupId);
-        if (selectedGroup) setGroup(selectedGroup.name);
+        setGroup(String(guest.groupId)); // ← עכשיו שומר את ה-ID של הקבוצה
       } catch (error) {
         setErrorMessage("שגיאה בטעינת פרטי האורח.");
       } finally {
@@ -53,16 +58,16 @@ const GuestForm: React.FC = () => {
       }
     };
     if (guestId) fetchGuest();
-  }, [guestId, categories]);
+  }, [guestId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
   
     try {
-      const selectedGroup = categories.find(g => g.name === group);
+      const selectedGroup = categories.find(g => g.id === Number(group));
       if (!selectedGroup) {
-        setErrorMessage("שגיאה: נא לבחור קטגוריה תקפה.");
+        setErrorMessage("שגיאה: נא לבחור קבוצה תקפה.");
         return;
       }
   
@@ -77,20 +82,17 @@ const GuestForm: React.FC = () => {
       navigate("/groups");
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
-        setErrorMessage(error.response.data); // מציג את השגיאה שהשרת החזיר
+        setErrorMessage(error.response.data);
       } else {
         setErrorMessage("שגיאה לא צפויה, נסי שוב.");
       }
     }
   };
-  
-  
 
   return (
     <div className="form-container">
       <h2>{guestId ? "עריכת אורח" : "הוספת אורח חדש"}</h2>
       {loading && <p>טוען נתונים...</p>}
-
 
       <form onSubmit={handleSubmit} className="neon-form">
         <label>שם:</label>
@@ -110,10 +112,11 @@ const GuestForm: React.FC = () => {
         <select value={group} onChange={(e) => setGroup(e.target.value)} required>
           <option value="">בחר קטגוריה</option>
           {categories.map(g => (
-            <option key={g.id} value={g.name}>{g.name}</option>
+            <option key={g.id} value={g.id}>{g.name}</option>
           ))}
         </select>
-        {errorMessage && <p className="error-message">{errorMessage}</p>} {/* הצגת הודעת שגיאה */}
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <button type="submit" disabled={loading || categories.length === 0}>
           {guestId ? "עדכן" : "אישור"}

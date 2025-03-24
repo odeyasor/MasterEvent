@@ -35,7 +35,7 @@ const GroupsPage: React.FC = () => {
     };
 
     fetchGroups();
-  }, [userId]);
+  }, [userId, groups]); // ← הוספת groups כ-dependency
 
   // פונקציה לשליפת אורחים של קבוצה
   const fetchGuests = async (groupId: number) => {
@@ -44,6 +44,7 @@ const GroupsPage: React.FC = () => {
       setGuests(guestsData);
     } catch (error) {
       console.error('Error fetching guests:', error);
+      setGuests([]); // מנקה את הרשימה במקרה של שגיאה
     }
   };
 
@@ -55,7 +56,7 @@ const GroupsPage: React.FC = () => {
       console.error('Error deleting guest:', error);
     }
   };
-  
+
 
   // פונקציה למחוק קבוצה
   const handleDeleteGroup = async (groupId: number) => {
@@ -86,11 +87,11 @@ const GroupsPage: React.FC = () => {
   return (
     <div className="organizer-groups-page">
       <h1>הקבוצות שלי</h1>
-  
+
       <button onClick={() => navigate('/group-form')}>
         <FaPlus /> {/* סמל להוספת קבוצה חדשה */}
       </button>
-  
+
       {loading ? (
         <p>טוען קבוצות...</p>
       ) : (
@@ -111,7 +112,7 @@ const GroupsPage: React.FC = () => {
                   </button>
                 </div>
               </div>
-  
+
               {/* הצגת רשימת האורחים רק אם הקבוצה נבחרה */}
               {selectedGroupId === group.id && (
                 <div>
@@ -125,9 +126,13 @@ const GroupsPage: React.FC = () => {
                     />
                   )}
                   {/* כפתור הוספת אורח */}
-                  <button onClick={() => navigate("/guest-form")}>
-                    <FaUserPlus /> הוסף אורח
-                  </button>
+                  {selectedGroupId && (
+                    <button onClick={() => navigate(`/guest-form/${selectedGroupId}`)}>
+                      <FaUserPlus /> הוסף אורח
+                    </button>
+                  )}
+
+
                 </div>
               )}
             </div>

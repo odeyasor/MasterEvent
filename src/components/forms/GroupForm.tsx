@@ -46,7 +46,10 @@ const AddGroupPage: React.FC = () => {
         await groupService.updateGroup(existingGroup.id.toString(), {
           name: groupName,
           organizerId: Number(userId)
-        });
+
+        }
+      );
+      navigate("/groups")
       } else {
         // יצירת קבוצה חדשה
         const newGroup: Group = { name: groupName, organizerId: Number(userId), id: 0 }; // נניח שה-ID ייווצר אוטומטית בשרת
@@ -64,7 +67,7 @@ const AddGroupPage: React.FC = () => {
   return (
     <div className="form-container">
       <h1>{existingGroup ? "עדכון קבוצה" : "הוספת קבוצה חדשה"}</h1>
-      
+
       <form className="neon-form">
         <label>שם הקבוצה:</label>
         <input
@@ -73,15 +76,15 @@ const AddGroupPage: React.FC = () => {
           value={groupName}
           onChange={(e) => setGroupName(e.target.value)}
         />
-  
+
         <button onClick={handleAddOrUpdateGroup} disabled={loading}>
           {loading ? "שומר..." : existingGroup ? "עדכן קבוצה" : "הוסף קבוצה"}
         </button>
-        <button onClick={() => navigate("/")}>ביטול</button>
+        {/* <button onClick={() => navigate("/groups")}>ביטול</button> */}
       </form>
     </div>
   );
-  
+
 };
 
 export default AddGroupPage;

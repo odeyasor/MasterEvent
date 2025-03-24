@@ -5,6 +5,9 @@ import seatingService from '../services/seatingService.ts'; // הוספתי את
 import guestService from '../services/guestService.ts'; // הוספתי את הסיומת .ts
 import { GuestInEvent } from '../types/types';
 import eventService from '../services/eventService.ts';
+import '../styles/form.css'
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 interface SeatingData {
   tableId: number;
@@ -107,8 +110,39 @@ const AssignGuestsToTablesPage = () => {
     setSeatsPerTable(Number(event.target.value));
   };
 
+  const downloadSeatingExcel = () => {
+    if (seatings.length === 0) {
+      alert("אין נתוני ישיבה להורדה.");
+      return;
+    }
+  
+    // הכנת הנתונים לטבלת אקסל
+    const seatingDataArray = [["Table ID", "Seat Number", "Guest Name"]];
+    seatings.forEach((seating) => {
+      seating.seats.forEach((guest, index) => {
+        seatingDataArray.push([
+          seating.tableId,
+          index + 1,
+          guests[guest.id] || `Guest ID: ${guest.id}`, // אם לא נמצא שם, הצג מזהה
+        ]);
+      });
+    });
+  
+    // יצירת גיליון וורקבוק
+    const ws = XLSX.utils.aoa_to_sheet(seatingDataArray);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Seating Arrangement");
+  
+    // יצירת קובץ להורדה
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const file = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    saveAs(file, "seating_arrangement.xlsx");
+  };
+  
   return (
-    <div>
+    <div className='form-container'>
       <h1>סידור אורחים לשולחנות</h1>
       <div>
         <label>
@@ -122,8 +156,13 @@ const AssignGuestsToTablesPage = () => {
         </label>
       </div>
       <button onClick={fetchGuestsAndAssignTables}>הקצה אורחים לשולחנות</button>
+  
+      {seatings.length > 0 && (
+        <button onClick={downloadSeatingExcel}>📥 הורד קובץ סידור ישיבה</button>
+      )}
+  
       {seatings.length === 0 ? (
-        <p>אין אורחים שהוקצו לשולחנות.</p> // אם לא הוקצו אורחים, הצג הודעה
+        <p>אין אורחים שהוקצו לשולחנות.</p>
       ) : (
         <ul>
           {seatings.map((seating) => (
@@ -132,7 +171,7 @@ const AssignGuestsToTablesPage = () => {
               <ul>
                 {seating.seats.map((guest, index) => (
                   <li key={index}>
-                    {guests[guest.id] || guest.id} - כיסא {index + 1} {/* אם לא נמצא שם, הצג את ה-guestId */}
+                    {guests[guest.id] || guest.id} - כיסא {index + 1}
                   </li>
                 ))}
               </ul>
@@ -142,6 +181,5 @@ const AssignGuestsToTablesPage = () => {
       )}
     </div>
   );
-};
-
+}
 export default AssignGuestsToTablesPage;

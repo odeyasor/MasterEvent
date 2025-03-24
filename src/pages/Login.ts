@@ -1,6 +1,6 @@
 import React, {useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import '../styles/LoginPage.css';
+import loginService from "../services/loginService.ts";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -15,14 +15,7 @@ const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://your-api-url.com/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
+      const response = await loginService(username,password)
       const data = await response.json();
       
       if (response.ok) {
@@ -38,14 +31,9 @@ const LoginPage: React.FC = () => {
       }
     } catch (err) {
       setError('שגיאה בקישור לשרת');
-      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
-  };
-
-  const navigateToRegister = () => {
-    navigate('/register');
   };
 
   return (
@@ -56,7 +44,7 @@ const LoginPage: React.FC = () => {
           <div className="textbox">
             <input
               type="text"
-              placeholder="שם משתמש"
+              placeholder="מייל"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -77,7 +65,7 @@ const LoginPage: React.FC = () => {
         </form>
         {error && <div className="error-message">{error}</div>}
         <div className="register-link">
-          <p>אין לך חשבון? <span onClick={navigateToRegister}>הירשם כאן</span></p>
+          <p>אין לך חשבון? <span onClick={()=>navigate("/register")}>הירשם כאן</span></p>
         </div>
       </div>
     </div>

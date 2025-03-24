@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import guestInEventService from "../services/guestInEventService.ts";
 import guestService from "../services/guestService.ts";
 import groupService from "../services/groupService.ts";
 import { GuestInEvent, Guest } from "../types/types.ts";
-import React from "react";
 import { useAuth } from "../context/AuthContext.tsx";
 import organizerService from "../services/organizerService.ts";
+import '../styles/form.css'
 
 const ConfirmedGuestsList = () => {
   const { eventId } = useParams<{ eventId: string }>(); // מזהה האירוע
@@ -88,7 +88,7 @@ const ConfirmedGuestsList = () => {
   });
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="form-container">
       {/* שדות סינון */}
       <div className="flex space-x-4">
         <input 
@@ -100,17 +100,15 @@ const ConfirmedGuestsList = () => {
         />
 
         <select 
-          className="border p-2 rounded-lg"
           value={genderFilter}
           onChange={(e) => setGenderFilter(e.target.value)}
         >
-          <option value="">בחר מין</option>
-          <option value="0">זכר</option>
-          <option value="1">נקבה</option>
+          <option value="">בחר מגדר</option>
+          <option value="0">גבר</option>
+          <option value="1">אישה</option>
         </select>
 
         <select 
-          className="border p-2 rounded-lg"
           value={groupFilter}
           onChange={(e) => setGroupFilter(e.target.value)}
         >
