@@ -1,94 +1,102 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import apiClient from '../api/apiClient.ts'; // יש לייבא את ה-client
-import { Guest ,Gender,SubGuest} from '../types/types.ts'; // יש לוודא שהוגדר טיפוס מתאים לאורח
+import { Guest, Gender, SubGuest } from '../types/types.ts'; // יש לוודא שהוגדר טיפוס מתאים לאורח
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import guestService from '../services/guestService.ts';
+import subGuestService from "../services/subGuestService.ts";
+import guestInEventService from '../services/guestInEventService.ts';
 
 const RSVP: React.FC = () => {
   const location = useLocation();
-  const [name, setName] = useState<string>(""); // שמור את השם של האורח
-  // שלוף את המייל מה-URL
-  const queryParams = new URLSearchParams(location.search);
-  const email = queryParams.get('email');
+  const [guest, setGuest] = useState<Guest>(); 
   const [participants, setParticipants] = useState<Omit<SubGuest, "id">[]>([]);
+  const queryParams = new URLSearchParams(location.search);
+  const guestId = queryParams.get("guestId"); // שליפת ה-guestId מה-URL
 
-  // פונקציה שמביאה את פרטי האורח לפי המייל
-  const getGuestByEmail = async (mail: string) => {
-    console.log("🔍 Trying to get guest by email:", mail); // קונסול לצורך בדיקה
-    try {
-      const guestId = await apiClient.get('/Guest/mail', { params: { mail } });
-      console.log("📤 Guest fetched:", guestId); // קונסול לתוצאה שהוחזרה
-      if (guestId) {
-        // כאן ניתן לשלוף גם את שם האורח אם יש API נוסף או לעדכן את השם בהתאם
-        setName("שם האורח שהוחזר מהשרת"); // לדוגמה להכניס את שם האורח
-        console.log("✅ Name set to:", "שם האורח שהוחזר מהשרת"); // קונסול שהשם השתנה
-      }
-    } catch (error) {
-      console.error("❌ שגיאה בשליפת פרטי אורח:", error); // קונסול בשגיאה
-    }
-  };
-
-  // השתמש ב-useEffect כדי לקרוא לפונקציה כשמייל נמצא
+  // השתמש ב-useEffect כדי לקרוא לפונקציה כשמזהה נמצא
   useEffect(() => {
-    if (email) {
-      console.log("📧 Email found in URL:", email); // קונסול לאימייל שנמצא ב-URL
-      getGuestByEmail(email);
-    } else {
-      console.log("❌ No email found in URL"); // קונסול אם לא נמצא מייל
-    }
-  }, [email]);
+    const fetchGuest = async () => {
+      if (guestId) {
+        try {
+          console.log("Fetching guest for ID:", guestId); // בדיקה בקונסול
+          const guest = await guestService.getGuest(Number(guestId));
+          setGuest(guest); // עדכון השם של האורח
+        } catch (error) {
+          console.error("❌ שגיאה בשליפת פרטי אורח:", error);
+        }
+      }
+    };
+  
+    fetchGuest();
+  }, [guestId]);
+  
+  // פונקציה להוספת משתתף
+const handleAddParticipant = () => {
+  if (!guestId) {
+    console.error("❌ guestId לא נמצא");
+    return;
+  }
+  setParticipants((prevParticipants) => [
+    ...prevParticipants,
+    { guestId: guestId, name: "", gender: Gender.male }, // שימוש במזהה האמיתי של האורח
+  ]);
+};
 
-  const handleAddParticipant = () => {
-    console.log("➕ Adding new participant"); // קונסול בהוספת משתתף
-    setParticipants([
-      ...participants,
-      { guestId: "1", name: "", gender: Gender.male }, // אין id
-    ]);
-    console.log("📋 Updated participants:", participants); // קונסול אחרי עדכון
-  };
 
+  // פונקציה להסרת משתתף
   const handleRemoveParticipant = (index: number) => {
-    console.log("❌ Removing participant at index:", index); // קונסול בהסרת משתתף
-    setParticipants(participants.filter((_, i) => i !== index));
-    console.log("📋 Updated participants after removal:", participants); // קונסול אחרי הסרה
+    setParticipants((prevParticipants) => prevParticipants.filter((_, i) => i !== index));
   };
 
+  // פונקציה לעדכון משתתף
   const handleParticipantChange = (index: number, field: keyof SubGuest, value: string) => {
-    console.log(`✏️ Updating participant at index ${index}, field: ${field}, new value: ${value}`); // קונסול בהזנה
-    setParticipants(
-      participants.map((participant, i) =>
+    setParticipants((prevParticipants) =>
+      prevParticipants.map((participant, i) =>
         i === index ? { ...participant, [field]: field === "gender" ? Number(value) as Gender : value } : participant
       )
     );
-    console.log("📋 Updated participants after change:", participants); // קונסול אחרי עדכון
   };
 
+  // פונקציה לשליחה
   const handleSubmit = async () => {
-    console.log("🔵 Submitting RSVP with data:", { name, guests: participants.length + 1, participants }); // קונסול לפני שליחה
     try {
-      const rsvpData = { name, guests: participants.length + 1, participants };
-
-      for (const participant of participants) {
-        console.log("📤 Sending participant:", participant); // קונסול לפני שליחה של כל משתתף
-        const response = await apiClient.post('/SubGuest', participant);
-        console.log("✅ Response from server:", response.data); // קונסול אחרי קבלת תגובה
+      if (!guestId) {
+        alert("❌ לא נמצא מזהה אורח");
+        return;
       }
-
+  
+      // יצירת אובייקט האורח הראשי כתת-אורח
+      const mainGuestAsSubGuest: Omit<SubGuest, "id"> = {
+        guestId: guestId,
+        name: String(guest?.name),
+        gender: guest?.gender ?? Gender.male, // ברירת מחדל למקרה של undefined
+      };
+  
+      // יצירת רשימה הכוללת את האורח הראשי וכל תתי האורחים
+      const allParticipants = [mainGuestAsSubGuest, ...participants];
+  
+      // שליחת כל תתי האורחים
+      for (const participant of allParticipants) {
+        await subGuestService.createSubGuest(participant);
+      }
+  
+      // שליפת האורח לפי ה-guestId
+      const guestInEvent = await guestInEventService.getGuestInEventByGuestId(String(guestId));
+  
+      // עדכון האורח כך ש-ok יהיה true
+      await guestInEventService.updateGuestInEvent(guestInEvent.id, { 
+        ...guestInEvent, 
+        ok: true 
+      });
+  
       alert("האישור נקלט בהצלחה!");
     } catch (error: any) {
-      if (error.response) {
-        console.error("❌ Server Error:", error.response.data); // קונסול בשגיאה בשרת
-        alert(`שגיאת שרת: ${error.response.data.message || "שגיאה כללית"}`);
-      } else if (error.request) {
-        console.error("❌ Request Error:", error.request); // קונסול בשגיאה בבקשה
-        alert("אין תגובה מהשרת, בדוק את החיבור");
-      } else {
-        console.error("❌ Unknown Error:", error.message); // קונסול בשגיאה לא צפויה
-        alert("שגיאה בלתי צפויה");
-      }
+      alert("שגיאה בלתי צפויה");
     }
   };
+  
+  
 
   return (
     <div className="p-4 max-w-md mx-auto bg-white shadow-md rounded-lg">
@@ -96,8 +104,7 @@ const RSVP: React.FC = () => {
       <label className="block mb-2">שם מלא:</label>
       <input
         type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={guest?.name}
         className="w-full p-2 border rounded"
       />
 

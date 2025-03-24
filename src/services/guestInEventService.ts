@@ -38,9 +38,16 @@ const guestInEventService = {
     await apiClient.delete(`/GuestInEvent/${id}`);
   },
 
+  
+// קבלת אורח לפי guestId
+getGuestInEventByGuestId: async (guestId: string): Promise<GuestInEvent> => {
+  const response: AxiosResponse<GuestInEvent> = await apiClient.get(`/GuestInEvent/byGuestId/${guestId}`);
+  return response.data;
+},
+
   // קבלת רשימת האורחים באירוע לפי eventId
   getGuestInEventsByEventId: async (eventId: string): Promise<GuestInEvent[]> => {
-    const response: AxiosResponse<GuestInEvent[]> = await apiClient.get(`/GuestInEvent/event/${eventId}`);
+    const response: AxiosResponse<GuestInEvent[]> = await apiClient.get(`/GuestInEvent/byEvent/${eventId}`);
     return response.data;
   },
 

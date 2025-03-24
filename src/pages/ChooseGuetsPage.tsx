@@ -63,7 +63,7 @@ const ChooseGuestsPage = () => {
 
     try {
       for (const guestId of selected) {
-        const guest = await guestService.getGuest(guestId);
+        const guest = await guestService.getGuest(Number(guestId));
         const guestInEvent = {
           guestId,
           eventId,
@@ -103,7 +103,7 @@ const ChooseGuestsPage = () => {
                     <input
                       type="checkbox"
                       checked={!!selectedGuests[guest.id]}
-                      onChange={() => toggleGuestSelection(guest.id)}
+                      onChange={() => toggleGuestSelection(String(guest.id))}
                     />
                     <span>{guest.name}</span>
                   </li>
