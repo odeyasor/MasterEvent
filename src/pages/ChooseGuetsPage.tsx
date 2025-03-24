@@ -63,7 +63,7 @@ const ChooseGuestsPage = () => {
 
     try {
       for (const guestId of selected) {
-        const guest = await guestService.getGuest(guestId);
+        const guest = await guestService.getGuest(Number(guestId));
         const guestInEvent = {
           guestId,
           eventId,
@@ -81,17 +81,12 @@ const ChooseGuestsPage = () => {
 
   return (
     <div>
-{/* <<<<<<< HEAD
-      <h2>האורחים שלי</h2>
-      {guests.length === 0 ? (
-        <p>אין לך אורחים עדיין</p>
-======= */}
+
       <h2>בחירת אורחים</h2>
       {loading ? (
         <p>טוען...</p>
       ) : error ? (
         <p>{error}</p>
-// >>>>>>> c9df9e9d6978a5b5676c0e8ea657fe33dcd53cf1
       ) : (
         groups.map((group) => (
           <div key={group.id} style={{ marginBottom: "20px" }}>
@@ -103,7 +98,7 @@ const ChooseGuestsPage = () => {
                     <input
                       type="checkbox"
                       checked={!!selectedGuests[guest.id]}
-                      onChange={() => toggleGuestSelection(guest.id)}
+                      onChange={() => toggleGuestSelection(String(guest.id))}
                     />
                     <span>{guest.name}</span>
                   </li>
