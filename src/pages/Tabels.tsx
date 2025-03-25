@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import guestInEventService from '../services/guestInEventService.ts'; // הוספתי את הסיומת .ts
-import seatingService from '../services/seatingService.ts'; // הוספתי את הסיומת .ts
-import guestService from '../services/guestService.ts'; // הוספתי את הסיומת .ts
+import guestInEventService from '../services/guestInEventService.ts';
+import seatingService from '../services/seatingService.ts';
+import guestService from '../services/guestService.ts';
 import { GuestInEvent } from '../types/types';
 import eventService from '../services/eventService.ts';
-import '../styles/form.css'
+import '../styles/form.css';
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
@@ -22,10 +22,10 @@ interface SeatingCreate {
 }
 
 const AssignGuestsToTablesPage = () => {
-  const { eventId } = useParams<{ eventId: string }>(); // קבלת מזהה האירוע מהפרמטר ב-URL
-  const [seatsPerTable, setSeatsPerTable] = useState<number>(0); // שמירת כמות כיסאות בשולחן
+  const { eventId } = useParams<{ eventId: string }>();
+  const [seatsPerTable, setSeatsPerTable] = useState<number>(0);
   const [seatings, setSeatings] = useState<SeatingData[]>([]);
-  const [guests, setGuests] = useState<{ [key: string]: string }>({}); // שמירה של שמות האורחים לפי מזהה
+  const [guests, setGuests] = useState<{ [key: string]: string }>({});
 
   // פונקציה להקצאת אורחים לשולחנות
   const fetchGuestsAndAssignTables = async () => {
@@ -33,32 +33,32 @@ const AssignGuestsToTablesPage = () => {
       console.error('מזהה האירוע חסר');
       return;
     }
-  
+
     try {
       const eventDetails = await eventService.getEvent(eventId);
       const separation = eventDetails.seperation;
       console.log('סוג ההפרדה באירוע:', separation);
-  
+
       if (seatsPerTable <= 0) {
         console.log('כמות הכיסאות בשולחן אינה תקינה:', seatsPerTable);
         return;
       }
-  
+
       // קביעת הפונקציה המתאימה לפי סוג ההפרדה
       const assignedTables = separation
         ? await guestInEventService.assignGuestsToTablesByGender(Number(eventId), seatsPerTable)
         : await guestInEventService.assignGuestsToTablesWithoutGenderSeparation(Number(eventId), seatsPerTable);
-  
+
       console.log('האורחים שהוקצו לשולחנות:', assignedTables);
-  
+
       // סידור הנתונים
       const seatingAssignments = Object.entries(assignedTables).map(([tableId, guests]) => ({
         tableId: parseInt(tableId),
         seats: guests,
       }));
-  
+
       setSeatings(seatingAssignments);
-  
+
       const seatingData: SeatingCreate[] = seatingAssignments.flatMap((tableData) =>
         tableData.seats.map((guest, index) => ({
           eventId: String(eventId),
@@ -67,7 +67,7 @@ const AssignGuestsToTablesPage = () => {
           seat: index + 1,
         }))
       );
-  
+
       if (seatingData.length > 0) {
         for (const seating of seatingData) {
           try {
@@ -78,7 +78,7 @@ const AssignGuestsToTablesPage = () => {
           }
         }
       }
-  
+
       // עדכון שמות האורחים
       const guestNames: { [key: string]: string } = {};
       for (const tableData of seatingAssignments) {
@@ -91,19 +91,17 @@ const AssignGuestsToTablesPage = () => {
           }
         }
       }
-  
+
       setGuests(guestNames);
     } catch (error) {
       console.error('שגיאה בהקצאת אורחים לשולחנות:', error);
     }
   };
-  
 
-  // שימוש ב- useEffect כדי להפעיל את הפונקציה ברגע שהמזהה אירוע או כמות הכיסאות משתנים
+  // שימוש ב- useEffect רק עבור עדכון כמות הכיסאות או eventId
   useEffect(() => {
     console.log('הפעלת useEffect עם eventId:', eventId, 'וכמות כיסאות בשולחן:', seatsPerTable);
-    fetchGuestsAndAssignTables();
-  }, [eventId, seatsPerTable]); // תעדכן רק אם משתנים מזהה האירוע או כמות הכיסאות
+  }, [eventId, seatsPerTable]); // לא מקראים את הפונקציה כאן
 
   // פונקציה לעדכון כמות הכיסאות לפי תיבת הטקסט
   const handleSeatsPerTableChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +113,7 @@ const AssignGuestsToTablesPage = () => {
       alert("אין נתוני ישיבה להורדה.");
       return;
     }
-  
+
     // הכנת הנתונים לטבלת אקסל
     const seatingDataArray = [["Table ID", "Seat Number", "Guest Name"]];
     seatings.forEach((seating) => {
@@ -127,12 +125,12 @@ const AssignGuestsToTablesPage = () => {
         ]);
       });
     });
-  
+
     // יצירת גיליון וורקבוק
     const ws = XLSX.utils.aoa_to_sheet(seatingDataArray);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Seating Arrangement");
-  
+
     // יצירת קובץ להורדה
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const file = new Blob([excelBuffer], {
@@ -140,7 +138,7 @@ const AssignGuestsToTablesPage = () => {
     });
     saveAs(file, "seating_arrangement.xlsx");
   };
-  
+
   return (
     <div className='form-container'>
       <h1>סידור אורחים לשולחנות</h1>
@@ -156,11 +154,11 @@ const AssignGuestsToTablesPage = () => {
         </label>
       </div>
       <button onClick={fetchGuestsAndAssignTables}>הקצה אורחים לשולחנות</button>
-  
+
       {seatings.length > 0 && (
         <button onClick={downloadSeatingExcel}>📥 הורד קובץ סידור ישיבה</button>
       )}
-  
+
       {seatings.length === 0 ? (
         <p>אין אורחים שהוקצו לשולחנות.</p>
       ) : (
@@ -181,5 +179,6 @@ const AssignGuestsToTablesPage = () => {
       )}
     </div>
   );
-}
+};
+
 export default AssignGuestsToTablesPage;
