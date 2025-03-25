@@ -39,10 +39,16 @@ const guestInEventService = {
   },
 
   // קבלת רשימת האורחים באירוע לפי eventId
-  getGuestInEventsByEventId: async (eventId: string): Promise<GuestInEvent[]> => {
-    const response: AxiosResponse<GuestInEvent[]> = await apiClient.get(`/GuestInEvent/event/${eventId}`);
+  getGuestInEventsByEventId: async (eventId: Number): Promise<GuestInEvent[]> => {
+    const response: AxiosResponse<GuestInEvent[]> = await apiClient.get(`/GuestInEvent/byEvent/${eventId}`);
     return response.data;
-  },
+},
+
+//אורח לפי אירוע ומזהה
+GetGuestsByEventIdAndGuestId: async (eventId: Number, guestId:Number):Promise<GuestInEvent> => {
+  const response: AxiosResponse<GuestInEvent> = await apiClient.get(`/GuestInEvent/eventId/${eventId}/guestId/${guestId}`);
+  return response.data;
+},
 
   // קבלת רשימת האורחים המאושרים בלבד באירוע
   getConfirmedGuests: async (eventId: string): Promise<GuestInEvent[]> => {

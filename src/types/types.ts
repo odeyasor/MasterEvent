@@ -3,6 +3,7 @@ export type EmailRequest = {
   eventId: string;
   subject: string;
   body: string;
+  toEmail:string;
 };
 export interface Event {
   id: number;

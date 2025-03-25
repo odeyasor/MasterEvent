@@ -13,7 +13,7 @@ import EventsPage from "../pages/EventsPage.tsx";
 import EventDetails from "../pages/EventDetails.tsx";
 import ChooseGuestsPage from "../pages/ChooseGuetsPage.tsx";
 import SendInvitationsPage from "../pages/SendInvitationsPage.tsx";
-import ConfirmedGuestsList from "../pages/GuestsInEventPage.tsx";
+import ConfirmedGuestsList from "../pages/guestsInEventPage.tsx";
 import GroupsPage from "../pages/GroupsPage.tsx";
 import OKPage from "../pages/OKPage.tsx";
 import AssignGuestsToTablesPage from "../pages/Tabels.tsx"

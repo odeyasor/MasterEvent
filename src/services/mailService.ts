@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { EmailRequest } from '../types/types.ts';
 
 const mailjetService = {
-  // שליחת אימייל
+  // שליחת אימייל לכמה נמענים
   sendEmail: async (emailData: EmailRequest): Promise<void> => {
     try {
       const response: AxiosResponse<void> = await apiClient.post('/email/send', emailData);
@@ -14,16 +14,15 @@ const mailjetService = {
     }
   },
 
-  // שליחת מייל עם מקומות ישיבה
-  sendSeatingsEmail: async (emailData: EmailRequest): Promise<void> => {
+  // שליחת אימייל לנמען יחיד
+  sendSingleEmail: async (emailData: EmailRequest): Promise<void> => {
     try {
-      const response: AxiosResponse<void> = await apiClient.post('/email/sendSeatings', emailData);
-      console.log('📧 Seating email sent successfully', response.status);
+      const response: AxiosResponse<void> = await apiClient.post('/email/sendSingle', emailData);
+      console.log('📧 Single email sent successfully', response.status);
     } catch (error) {
-      console.error('❌ Failed to send seating email', error);
+      console.error('❌ Failed to send single email', error);
       throw error;
     }
   }
 };
-
 export default mailjetService;
