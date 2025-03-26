@@ -11,14 +11,7 @@ import { saveAs } from "file-saver";
 
 interface SeatingData {
   tableId: number;
-  seats: GuestInEvent[];
-}
-
-interface SeatingCreate {
-  eventId: string;
-  subGuestId: string;
-  table: number;
-  seat: number;
+  seats: { guestId: string; name: string }[];
 }
 
 const AssignGuestsToTablesPage = () => {
@@ -27,13 +20,12 @@ const AssignGuestsToTablesPage = () => {
   const [seatings, setSeatings] = useState<SeatingData[]>([]);
   const [guests, setGuests] = useState<{ [key: string]: string }>({});
 
-  // פונקציה להקצאת אורחים לשולחנות
+
   const fetchGuestsAndAssignTables = async () => {
     if (!eventId) {
       console.error('מזהה האירוע חסר');
       return;
     }
-
     try {
       const eventDetails = await eventService.getEvent(eventId);
       const separation = eventDetails.seperation;
@@ -44,66 +36,32 @@ const AssignGuestsToTablesPage = () => {
         return;
       }
 
-      // קביעת הפונקציה המתאימה לפי סוג ההפרדה
       const assignedTables = separation
         ? await guestInEventService.assignGuestsToTablesByGender(Number(eventId), seatsPerTable)
         : await guestInEventService.assignGuestsToTablesWithoutGenderSeparation(Number(eventId), seatsPerTable);
+        
+      console.log('תתי האורחים שהוקצו לשולחנות:', assignedTables);
 
-      console.log('האורחים שהוקצו לשולחנות:', assignedTables);
-
-      // סידור הנתונים
-      const seatingAssignments = Object.entries(assignedTables).map(([tableId, guests]) => ({
+      const seatingAssignments = Object.entries(assignedTables).map(([tableId, subGuests]) => ({
         tableId: parseInt(tableId),
-        seats: guests,
-      }));
-
-      setSeatings(seatingAssignments);
-
-      const seatingData: SeatingCreate[] = seatingAssignments.flatMap((tableData) =>
-        tableData.seats.map((guest, index) => ({
-          eventId: String(eventId),
-          subGuestId: String(guest.guestId),
-          table: tableData.tableId,
-          seat: index + 1,
+        seats: subGuests.map(subGuest => ({
+          guestId: subGuest.guestId, 
+          name: subGuest.name ?? `אורח ${subGuest.guestId}` // מוודא שהשם לא יהיה undefined
         }))
-      );
-
-      if (seatingData.length > 0) {
-        for (const seating of seatingData) {
-          try {
-            console.log('שולחים מקום ישיבה:', seating);
-            await seatingService.createSeating(seating);
-          } catch (error) {
-            console.error('שגיאה בשליחת מקום ישיבה:', seating, error);
-          }
-        }
-      }
-
-      // עדכון שמות האורחים
-      const guestNames: { [key: string]: string } = {};
-      for (const tableData of seatingAssignments) {
-        for (const guest of tableData.seats) {
-          try {
-            const guestInfo = await guestService.getGuest(Number(guest.guestId));
-            guestNames[guest.id] = guestInfo.name;
-          } catch (error) {
-            console.error(`שגיאה בהבאת פרטי האורח עם מזהה ${guest.id}:`, error);
-          }
-        }
-      }
-
-      setGuests(guestNames);
+      }));
+      
+      setSeatings(seatingAssignments);
     } catch (error) {
       console.error('שגיאה בהקצאת אורחים לשולחנות:', error);
     }
   };
 
-  // שימוש ב- useEffect רק עבור עדכון כמות הכיסאות או eventId
   useEffect(() => {
-    console.log('הפעלת useEffect עם eventId:', eventId, 'וכמות כיסאות בשולחן:', seatsPerTable);
-  }, [eventId, seatsPerTable]); // לא מקראים את הפונקציה כאן
+    if (eventId) {
+      fetchGuestsAndAssignTables();
+    }
+  }, [eventId, seatsPerTable]);
 
-  // פונקציה לעדכון כמות הכיסאות לפי תיבת הטקסט
   const handleSeatsPerTableChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSeatsPerTable(Number(event.target.value));
   };
@@ -119,9 +77,9 @@ const AssignGuestsToTablesPage = () => {
     seatings.forEach((seating) => {
       seating.seats.forEach((guest, index) => {
         seatingDataArray.push([
-          seating.tableId,
-          index + 1,
-          guests[guest.id] || `Guest ID: ${guest.id}`, // אם לא נמצא שם, הצג מזהה
+          String(seating.tableId),
+          String(index + 1),
+          guest.name || `Guest ID: ${guest.guestId}`,
         ]);
       });
     });
@@ -169,7 +127,7 @@ const AssignGuestsToTablesPage = () => {
               <ul>
                 {seating.seats.map((guest, index) => (
                   <li key={index}>
-                    {guests[guest.id] || guest.id} - כיסא {index + 1}
+                 כיסא {index + 1} - {guest.name} 
                   </li>
                 ))}
               </ul>

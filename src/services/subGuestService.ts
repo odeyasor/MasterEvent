@@ -1,6 +1,6 @@
 import apiClient from '../api/apiClient.ts';
 import { AxiosResponse } from 'axios';
-import { SubGuest,Gender, Guest } from '../types/types';
+import { SubGuest, Gender } from '../types/types';
 
 // Type for creating a new subguest (without id)
 export type SubGuestCreate = Omit<SubGuest, 'id'>;
@@ -17,7 +17,13 @@ const subGuestService = {
 
   // Get subguest by id
   getSubGuest: async (id: string): Promise<SubGuest> => {
-    const response: AxiosResponse<SubGuest> = await apiClient.get(`/SubGuest/${id}`);
+    const response: AxiosResponse<SubGuest> = await apiClient.get(`/SubGuest/subguest/${id}`);
+    return response.data;
+  },
+
+  // Get subguests by guestId
+  getSubGuestsByGuestId: async (guestId: string): Promise<SubGuest[]> => {
+    const response: AxiosResponse<SubGuest[]> = await apiClient.get(`/SubGuest/guest/${guestId}`);
     return response.data;
   },
 
@@ -35,13 +41,7 @@ const subGuestService = {
 
   // Delete subguest
   deleteSubGuest: async (id: string): Promise<void> => {
-    await apiClient.delete(`/subguests/${id}`);
-  },
-
-  // Get subguests by guest id
-  getSubGuestsByGuestId: async (guestId: string): Promise<SubGuest[]> => {
-    const response: AxiosResponse<SubGuest[]> = await apiClient.get(`/SubGuest/guest/${guestId}`);
-    return response.data;
+    await apiClient.delete(`/SubGuest/${id}`);
   },
 
   // Get subguests by name

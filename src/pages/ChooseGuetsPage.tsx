@@ -7,7 +7,8 @@ import React from "react";
 import { UploadGuestsForm, uploadGuestsFile } from "../components/UploadGuestsForm.tsx";
 import { downloadExcelTemplate } from "../utils/fileUtils.ts";
 import { useNavigate, useParams } from "react-router-dom";
-import '../styles/choose-guest.css'
+import '../styles/choose-guest.css';
+
 const ChooseGuestsPage = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [guestsByGroup, setGuestsByGroup] = useState<{ [key: string]: Guest[] }>({});
@@ -23,24 +24,45 @@ const ChooseGuestsPage = () => {
 
     const fetchGroupsAndGuests = async () => {
       try {
+        console.log("Fetching groups and guests...");
+
         if (!storedUser) {
+          console.error("No organizer ID found");
           setError("No organizer ID found");
           setLoading(false);
           return;
         }
 
+        console.log("Fetching groups for organizer", storedUser);
         const groupData = await groupService.getGroupsByOrganizerId(storedUser);
+        console.log("Groups fetched:", groupData);
         setGroups(groupData);
 
         const guestsData: { [key: string]: Guest[] } = {};
+        console.log("Fetching guests for each group...");
+
+        const allGuestsInEvent = await guestInEventService.getGuestInEventsByEventId(Number(eventId)); // קבלת אורחים שכבר הוזמנו לאירוע
+        console.log("Guests already in event:", allGuestsInEvent);
+
+        // יצירת מערך של מזהי אורחים שהוזמנו
+        const invitedGuestIds = allGuestsInEvent.map((guestInEvent) => guestInEvent.guestId);
+        console.log("Invited guest IDs:", invitedGuestIds);
 
         for (const group of groupData) {
+          console.log(`Fetching guests for group ${group.id}`);
           const guestsInGroup = await guestService.getGuestsByGroup(group.id);
-          guestsData[group.id] = guestsInGroup;
+          console.log(`Guests in group ${group.id}:`, guestsInGroup);
+
+          // סינון האורחים שכבר הוזמנו לאירוע
+          const filteredGuests = guestsInGroup.filter(guest => !invitedGuestIds.includes(guest.id));
+          console.log(`Filtered guests for group ${group.id}:`, filteredGuests);
+
+          guestsData[group.id] = filteredGuests;
         }
 
         setGuestsByGroup(guestsData);
       } catch (err) {
+        console.error("Error fetching groups or guests:", err);
         setError("Failed to fetch groups or guests");
       } finally {
         setLoading(false);
@@ -48,7 +70,7 @@ const ChooseGuestsPage = () => {
     };
 
     fetchGroupsAndGuests();
-  }, []);
+  }, [eventId]);
 
   const toggleGuestSelection = (guestId: string) => {
     setSelectedGuests((prev) => ({ ...prev, [guestId]: !prev[guestId] }));
@@ -80,7 +102,7 @@ const ChooseGuestsPage = () => {
 
     try {
       for (const guestId of selected) {
-        const guest = await guestService.getGuest(guestId);
+        const guest = await guestService.getGuest(Number(guestId));
         const guestInEvent = {
           guestId,
           eventId,
@@ -103,8 +125,6 @@ const ChooseGuestsPage = () => {
         <p>טוען...</p>
       ) : error ? (
         <p>{error}</p>
-      ) : groups.length === 0 || Object.keys(guestsByGroup).every(groupId => guestsByGroup[groupId].length === 0) ? (
-        <p>אין לך אורחים עדיין</p>
       ) : (
         groups.map((group) => (
           <div key={group.id} className="group-container">
@@ -112,7 +132,7 @@ const ChooseGuestsPage = () => {
               <input
                 type="checkbox"
                 checked={!!groupSelections[group.id]}
-                onChange={() => toggleGroupSelection(group.id)}
+                onChange={() => toggleGroupSelection(String(group.id))}
               />
               {group.name}
             </h3>
@@ -123,7 +143,7 @@ const ChooseGuestsPage = () => {
                     <input
                       type="checkbox"
                       checked={!!selectedGuests[guest.id]}
-                      onChange={() => toggleGuestSelection(guest.id)}
+                      onChange={() => toggleGuestSelection(String(guest.id))}
                     />
                     <span>{guest.name}</span>
                   </li>
@@ -138,10 +158,8 @@ const ChooseGuestsPage = () => {
       <UploadGuestsForm onFileUpload={uploadGuestsFile} />
       <button onClick={downloadExcelTemplate}>הורד תבנית אקסל</button>
       <button onClick={confirmGuests}>הוספה לאירוע</button>
-      {/* <button onClick={() => navigate("/add-guest")}>אורח חדש</button> */}
     </div>
   );
-  
 };
 
 export default ChooseGuestsPage;
