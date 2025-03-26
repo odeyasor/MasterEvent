@@ -1,6 +1,6 @@
 import apiClient from '../api/apiClient.ts';
 import { AxiosResponse } from 'axios';
-import { GuestInEvent } from '../types/types';
+import { GuestInEvent, SubGuest } from '../types/types';
 
 // Type for creating a new guest in event (without id)
 export type GuestInEventCreate = Omit<GuestInEvent, 'id'>;
@@ -47,9 +47,16 @@ getGuestInEventByGuestId: async (guestId: string): Promise<GuestInEvent> => {
 
   // קבלת רשימת האורחים באירוע לפי eventId
   getGuestInEventsByEventId: async (eventId: string): Promise<GuestInEvent[]> => {
+
     const response: AxiosResponse<GuestInEvent[]> = await apiClient.get(`/GuestInEvent/byEvent/${eventId}`);
     return response.data;
-  },
+},
+
+//אורח לפי אירוע ומזהה
+GetGuestsByEventIdAndGuestId: async (eventId: Number, guestId:Number):Promise<GuestInEvent> => {
+  const response: AxiosResponse<GuestInEvent> = await apiClient.get(`/GuestInEvent/eventId/${eventId}/guestId/${guestId}`);
+  return response.data;
+},
 
   // קבלת רשימת האורחים המאושרים בלבד באירוע
   getConfirmedGuests: async (eventId: string): Promise<GuestInEvent[]> => {
@@ -58,16 +65,16 @@ getGuestInEventByGuestId: async (guestId: string): Promise<GuestInEvent> => {
   },
 
   // סידור אורחים לשולחנות עם הפרדה מגדרית
-assignGuestsToTablesByGender: async (eventId: number, seatsPerTable: number): Promise<Record<number, GuestInEvent[]>> => {
-  const response: AxiosResponse<Record<number, GuestInEvent[]>> = await apiClient.get(
+assignGuestsToTablesByGender: async (eventId: number, seatsPerTable: number): Promise<Record<number, SubGuest[]>> => {
+  const response: AxiosResponse<Record<number, SubGuest[]>> = await apiClient.get(
     `/GuestInEvent/assign-tables-by-gender?eventId=${eventId}&seatsPerTable=${seatsPerTable}`
   );
   return response.data;
 },
 
 // סידור אורחים לשולחנות בלי הפרדה מגדרית
-assignGuestsToTablesWithoutGenderSeparation: async (eventId: number, seatsPerTable: number): Promise<Record<number, GuestInEvent[]>> => {
-  const response: AxiosResponse<Record<number, GuestInEvent[]>> = await apiClient.get(
+assignGuestsToTablesWithoutGenderSeparation: async (eventId: number, seatsPerTable: number): Promise<Record<number, SubGuest[]>> => {
+  const response: AxiosResponse<Record<number, SubGuest[]>> = await apiClient.get(
     `/GuestInEvent/assign-tables-without-gender-separation?eventId=${eventId}&seatsPerTable=${seatsPerTable}`
   );
   return response.data;

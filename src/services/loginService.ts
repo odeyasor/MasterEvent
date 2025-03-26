@@ -9,16 +9,9 @@ interface AuthResponse {
 const loginService = async (mail: string, pass: string) => {
     try {
       const response = await apiClient.post('/Login', { mail, pass });
-      console.log(response); // הדפסת התשובה מהשרת
-
-      // הדפסת התגובה כדי לראות את מה שהשרת מחזיר
-      console.log('Response from server:', response);
-  
-      // אם התגובה מכילה שגיאה (message), להחזיר אותה
       if (response.data && response.data.message) {
         throw new Error(response.data.message);
       }
-  
       // במקרה שאין שגיאה, להחזיר את ה-token
       return response.data;
     } catch (error) {

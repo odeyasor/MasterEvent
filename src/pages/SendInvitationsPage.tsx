@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import guestService from "../services/guestService.ts";
+import guestInEventService from "../services/guestInEventService.ts";
 import eventService from "../services/eventService.ts";
 import mailjetService from "../services/mailService.ts";
 import { GuestInEvent } from "../types/types.ts";
+import guestService from "../services/guestService.ts";
 import "../styles/styles.css";
-import guestInEventService from "../services/guestInEventService.ts";
 
 const SendInvitationsPage = () => {
   const { eventId } = useParams();
@@ -17,7 +17,7 @@ const SendInvitationsPage = () => {
   const [invitationImageBase64, setInvitationImageBase64] = useState("");
   const [guests, setGuests] = useState<GuestInEvent[]>([]);
 
-  // פונקציה לבדוק תקינות אימייל
+
   const isValidEmail = (email: string) => /\S+@\S+\.\S+/.test(email);
 
   useEffect(() => {
@@ -28,16 +28,14 @@ const SendInvitationsPage = () => {
       }
 
       try {
-        const event = await eventService.getEvent(eventId);
+        const event = await eventService.getEvent(Number(eventId));
         setEventName(event.eventName);
         setInvitationImageBase64(event.invitation);
         setSubject(`הזמנה לאירוע: ${event.eventName}`);
-        setContent(`
-          שלום,\n\n
-          אתם מוזמנים לאירוע "${event.eventName}".\n\n
-          <img src="data:image/jpeg;base64,${event.invitation}" alt="הזמנה לאירוע" style="max-width: 100%; height: auto;" />\n\n
-          נא אשרו את השתתפותכם בקישור הבא: <a href="http://localhost:3000/ok">לחץ כאן לאישור</a>
-        `);
+
+        setContent(
+          `שלום,\n\nאתם מוזמנים לאירוע "${event.eventName}".\n\n<img src="data:image/jpeg;base64,${event.invitation}" alt="הזמנה לאירוע" style="max-width: 100%; height: auto;" />\n\nנא אשרו את השתתפותכם בקישור הבא: <a href="http://localhost:3000/ok">לחץ כאן לאישור</a>`
+        );
       } catch (err) {
         console.error("❌ שגיאה בטעינת פרטי האירוע:", err);
       }
@@ -59,6 +57,7 @@ const SendInvitationsPage = () => {
     };
     
 
+
     fetchEventDetails();
     fetchGuests();
   }, [eventId]);
@@ -69,7 +68,7 @@ const SendInvitationsPage = () => {
       setStatus("אין מזהה אירוע");
       return;
     }
-  
+
     try {
       setStatus("📨 שולח הזמנות...");
       if (filteredGuests.length > 0) {
@@ -102,6 +101,7 @@ const SendInvitationsPage = () => {
             }
           } else {
             console.warn(`⚠️ Skipping invalid email: ${guestDetail.mail}`);
+
           }
         }
         setStatus("✅ ההזמנות נשלחו בהצלחה");
@@ -109,7 +109,8 @@ const SendInvitationsPage = () => {
         setStatus("⚠️ אין מוזמנים מתאימים לשליחה");
       }
     } catch (err) {
-      console.error("❌ שגיאה בשליחת ההזמנות:", err);
+
+      console.error("שגיאה בשליחת ההזמנות", err);
       setStatus("❌ שגיאה בשליחת ההזמנות");
     }
   };
@@ -139,6 +140,7 @@ const SendInvitationsPage = () => {
         שלח למי שלא אישר הגעה
       </button>
       <button onClick={() => sendInvitationsToGuests(guests.filter(g => g.ok === true))}>
+
         שלח למי שאישר הגעה
       </button>
 

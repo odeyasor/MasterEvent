@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/login-and-register.css';
+import '../styles/form.css';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../context/AuthContext.tsx';
 import axios from 'axios';
@@ -94,7 +94,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="form-container">
       <div className="login-box">
         <h1>ברוכים הבאים</h1>
         <form onSubmit={handleSubmit}>

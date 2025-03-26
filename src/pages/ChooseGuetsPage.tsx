@@ -7,11 +7,13 @@ import React from "react";
 import { UploadGuestsForm, uploadGuestsFile } from "../components/UploadGuestsForm.tsx";
 import { downloadExcelTemplate } from "../utils/fileUtils.ts";
 import { useNavigate, useParams } from "react-router-dom";
+import '../styles/choose-guest.css';
 
 const ChooseGuestsPage = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [guestsByGroup, setGuestsByGroup] = useState<{ [key: string]: Guest[] }>({});
   const [selectedGuests, setSelectedGuests] = useState<{ [key: string]: boolean }>({});
+  const [groupSelections, setGroupSelections] = useState<{ [key: string]: boolean }>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -22,24 +24,45 @@ const ChooseGuestsPage = () => {
 
     const fetchGroupsAndGuests = async () => {
       try {
+        console.log("Fetching groups and guests...");
+
         if (!storedUser) {
+          console.error("No organizer ID found");
           setError("No organizer ID found");
           setLoading(false);
           return;
         }
 
+        console.log("Fetching groups for organizer", storedUser);
         const groupData = await groupService.getGroupsByOrganizerId(storedUser);
+        console.log("Groups fetched:", groupData);
         setGroups(groupData);
 
         const guestsData: { [key: string]: Guest[] } = {};
+        console.log("Fetching guests for each group...");
+
+        const allGuestsInEvent = await guestInEventService.getGuestInEventsByEventId(Number(eventId)); // קבלת אורחים שכבר הוזמנו לאירוע
+        console.log("Guests already in event:", allGuestsInEvent);
+
+        // יצירת מערך של מזהי אורחים שהוזמנו
+        const invitedGuestIds = allGuestsInEvent.map((guestInEvent) => guestInEvent.guestId);
+        console.log("Invited guest IDs:", invitedGuestIds);
 
         for (const group of groupData) {
+          console.log(`Fetching guests for group ${group.id}`);
           const guestsInGroup = await guestService.getGuestsByGroup(group.id);
-          guestsData[group.id] = guestsInGroup;
+          console.log(`Guests in group ${group.id}:`, guestsInGroup);
+
+          // סינון האורחים שכבר הוזמנו לאירוע
+          const filteredGuests = guestsInGroup.filter(guest => !invitedGuestIds.includes(guest.id));
+          console.log(`Filtered guests for group ${group.id}:`, filteredGuests);
+
+          guestsData[group.id] = filteredGuests;
         }
 
         setGuestsByGroup(guestsData);
       } catch (err) {
+        console.error("Error fetching groups or guests:", err);
         setError("Failed to fetch groups or guests");
       } finally {
         setLoading(false);
@@ -47,10 +70,26 @@ const ChooseGuestsPage = () => {
     };
 
     fetchGroupsAndGuests();
-  }, []);
+  }, [eventId]);
 
   const toggleGuestSelection = (guestId: string) => {
     setSelectedGuests((prev) => ({ ...prev, [guestId]: !prev[guestId] }));
+  };
+
+  const toggleGroupSelection = (groupId: string) => {
+    const newSelection = !groupSelections[groupId];
+    setGroupSelections((prev) => ({
+      ...prev,
+      [groupId]: newSelection,
+    }));
+
+    const guestsInGroup = guestsByGroup[groupId] || [];
+    const updatedSelectedGuests = guestsInGroup.reduce((acc, guest) => {
+      acc[guest.id] = newSelection;
+      return acc;
+    }, {} as { [key: string]: boolean });
+
+    setSelectedGuests((prev) => ({ ...prev, ...updatedSelectedGuests }));
   };
 
   const confirmGuests = async () => {
@@ -81,25 +120,26 @@ const ChooseGuestsPage = () => {
 
   return (
     <div>
-{/* <<<<<<< HEAD
-      <h2>האורחים שלי</h2>
-      {guests.length === 0 ? (
-        <p>אין לך אורחים עדיין</p>
-======= */}
       <h2>בחירת אורחים</h2>
       {loading ? (
         <p>טוען...</p>
       ) : error ? (
         <p>{error}</p>
-// >>>>>>> c9df9e9d6978a5b5676c0e8ea657fe33dcd53cf1
       ) : (
         groups.map((group) => (
-          <div key={group.id} style={{ marginBottom: "20px" }}>
-            <h3>{group.name}</h3>
-            <ul style={{ listStyle: "none", padding: 0 }}>
+          <div key={group.id} className="group-container">
+            <h3 className="group-title">
+              <input
+                type="checkbox"
+                checked={!!groupSelections[group.id]}
+                onChange={() => toggleGroupSelection(String(group.id))}
+              />
+              {group.name}
+            </h3>
+            <ul className="guest-list">
               {guestsByGroup[group.id]?.length ? (
                 guestsByGroup[group.id].map((guest) => (
-                  <li key={guest.id} style={{ display: "flex", alignItems: "center" }}>
+                  <li key={guest.id} className="guest-item">
                     <input
                       type="checkbox"
                       checked={!!selectedGuests[guest.id]}
@@ -115,11 +155,9 @@ const ChooseGuestsPage = () => {
           </div>
         ))
       )}
-<UploadGuestsForm onFileUpload={uploadGuestsFile} />
-<button onClick={downloadExcelTemplate}>הורד תבנית אקסל</button>
-
-      <button onClick={confirmGuests}>הזמן</button>
-      <button onClick={() => navigate("/add-guest")}>אורח חדש</button>
+      <UploadGuestsForm onFileUpload={uploadGuestsFile} />
+      <button onClick={downloadExcelTemplate}>הורד תבנית אקסל</button>
+      <button onClick={confirmGuests}>הוספה לאירוע</button>
     </div>
   );
 };

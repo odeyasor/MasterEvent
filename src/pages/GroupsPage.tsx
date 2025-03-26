@@ -4,7 +4,7 @@ import groupService from '../services/groupService.ts';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useNavigate } from 'react-router-dom';
 import GuestsList from './GuestsList.tsx';
-import { FaEdit, FaTrashAlt, FaArrowDown, FaUserPlus, FaUserMinus } from 'react-icons/fa'; // ייבוא סמלים
+import { FaEdit, FaTrashAlt, FaArrowDown, FaUserPlus, FaUserMinus, FaPlusCircle, FaPlus } from 'react-icons/fa'; // ייבוא סמלים
 import '../styles/display.css'
 import guestService from '../services/guestService.ts';
 
@@ -35,7 +35,7 @@ const GroupsPage: React.FC = () => {
     };
 
     fetchGroups();
-  }, [userId]);
+  }, [userId, groups]); // ← הוספת groups כ-dependency
 
   // פונקציה לשליפת אורחים של קבוצה
   const fetchGuests = async (groupId: number) => {
@@ -44,6 +44,7 @@ const GroupsPage: React.FC = () => {
       setGuests(guestsData);
     } catch (error) {
       console.error('Error fetching guests:', error);
+      setGuests([]); // מנקה את הרשימה במקרה של שגיאה
     }
   };
 
@@ -55,7 +56,7 @@ const GroupsPage: React.FC = () => {
       console.error('Error deleting guest:', error);
     }
   };
-  
+
 
   // פונקציה למחוק קבוצה
   const handleDeleteGroup = async (groupId: number) => {
@@ -87,7 +88,9 @@ const GroupsPage: React.FC = () => {
     <div className="organizer-groups-page">
       <h1>הקבוצות שלי</h1>
 
-      <button onClick={() => navigate('/group-form')}>הוסף קבוצה חדשה</button>
+      <button onClick={() => navigate('/group-form')}>
+        <FaPlus /> {/* סמל להוספת קבוצה חדשה */}
+      </button>
 
       {loading ? (
         <p>טוען קבוצות...</p>
@@ -123,9 +126,13 @@ const GroupsPage: React.FC = () => {
                     />
                   )}
                   {/* כפתור הוספת אורח */}
-                  <button onClick={()=>navigate("/guest-form") }>
-                    <FaUserPlus /> הוסף אורח
-                  </button>
+                  {selectedGroupId && (
+                    <button onClick={() => navigate(`/guest-form/${selectedGroupId}`)}>
+                      <FaUserPlus /> הוסף אורח
+                    </button>
+                  )}
+
+
                 </div>
               )}
             </div>
@@ -135,5 +142,4 @@ const GroupsPage: React.FC = () => {
     </div>
   );
 };
-
-export default GroupsPage;
+export default GroupsPage

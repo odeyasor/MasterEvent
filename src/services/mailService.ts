@@ -25,5 +25,4 @@ const mailjetService = {
     }
   }
 };
-
 export default mailjetService;

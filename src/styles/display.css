@@ -1,17 +1,26 @@
+body {
+  direction: rtl; /* כל הדף יופיע מימין לשמאל */
+}
+
+
+
 .guest-row {
   display: flex;
-  gap: 20px;
+  justify-content: space-between; /* פיזור שווה בין התוכן */
+  width: 100%; /* על כל שורה לקחת את כל רוחב הקונטיינר */
   padding: 10px;
   align-items: center;
-  justify-content: space-between;
 }
 
 .guest-row span {
-  width: 150px; /* קביעת גודל אחיד לעמודות */
+  width: 25%; /* כל span יקח 25% מהשורה */
+  text-align: center; /* יישור התוכן למרכז */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+
 
 .guest-header {
   font-weight: bold;
@@ -29,6 +38,39 @@
 }
 
 .add-guest:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* עיצוב חדש */
+.group-header {
+  display: flex;
+  justify-content: space-between; /* יוצר פער בין שני הצדדים */
+  align-items: center;
+  padding: 10px 0;
+}
+
+.group-header-left {
+  flex: 1; /* מאפשר לגודל השם למלא את כל המקום שנשאר */
+  text-align: right; /* מיישר את שם הקבוצה לימין */
+}
+
+.group-header-right {
+  display: flex;
+  gap: 10px; /* פער בין הכפתורים */
+  direction: rtl; /* יישור הכפתורים מימין לשמאל */
+}
+
+.group-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff00ff; /* או צבע אחר שתרצה */
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.group-header button:hover {
   color: #fff;
   transform: scale(1.1);
 }
