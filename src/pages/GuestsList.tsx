@@ -42,7 +42,7 @@ const GuestsList: React.FC<GuestsListProps> = ({ groupId, onClose }) => {
   };
 
   const handleEditGuest = (guestId: number) => {
-    navigate(`/guest-form/${guestId}`);
+    navigate(`/guest-form?guestId=${guestId}`);
   };
 
   // פונקציה להמיר את המגדר למילים

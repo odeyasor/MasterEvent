@@ -58,6 +58,8 @@ const AppRoutes = () => {
           <Route path="/add-guest/:groupName?" element={<GuestForm />} />
           <Route path="/guest-form/:groupId" element={<GuestForm />} />
           <Route path="/guest-form/:guestId" element={<GuestForm />} />
+          // Route נשאר כמו שהוא
+<Route path="/guest-form" element={<GuestForm />} />
 
         </Route>
 

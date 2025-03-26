@@ -5,10 +5,18 @@ import groupService from "../../services/groupService.ts";
 import { Gender, Group } from "../../types/types.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
 import "../../styles/form.css";
+import { useLocation } from 'react-router-dom';
 
+ 
 const GuestForm: React.FC = () => {
   const { userId } = useAuth();
-  const { guestId, groupId } = useParams(); // ← הוספתי קבלת groupId מהנתיב
+  const {  groupId } = useParams(); // ← הוספתי קבלת groupId מהנתיב
+ const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const guestId = queryParams.get('guestId');
+  console.log("guestId from query:", guestId); // אם הוא מופיע כאן, זו יכולה להיות פתרון זמני
+
+
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -21,9 +29,12 @@ const GuestForm: React.FC = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
+      console.log(guestId); // הדפסה לצורך בדיקה
+
       if (!userId) return;
       setLoading(true);
       try {
+
         const groups: Group[] = await groupService.getGroupsByOrganizerId(userId);
         setCategories(groups);
 
