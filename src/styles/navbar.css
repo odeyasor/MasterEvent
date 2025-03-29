@@ -3,10 +3,12 @@ body {
   color: #fff;
   font-family: Arial, sans-serif;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 h1, h2, h3 {
-  color: #0ff; /* תכלת זוהר */
+  color: #0ff; /* תכלת ניאון */
   text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
 
@@ -15,6 +17,7 @@ p {
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
+/* כפתורים */
 button {
   background-color: #ff00ff; /* סגול ניאון */
   color: #fff;
@@ -32,6 +35,7 @@ button:hover {
   transform: scale(1.1);
 }
 
+/* קישורים */
 a {
   color: #00ff00; /* ירוק ניאון */
   text-decoration: none;
@@ -43,14 +47,7 @@ a:hover {
   text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
 }
 
-.card {
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-  margin: 20px;
-}
-
+/* סרגל ניווט */
 .navbar {
   background-color: #111 !important;
   padding: 15px;
@@ -58,38 +55,42 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3);
+  width: 100%;
 }
 
-.navbar ul {
+/* תפריט הקישורים */
+.nav-links {
   list-style: none;
   display: flex;
   margin: 0;
   padding: 0;
 }
 
-.navbar li {
+.nav-links li {
   margin: 0 15px;
 }
 
-.navbar a, .navbar button {
-  color: #0ff; /* תכלת זוהר */
-  text-decoration: none;
+.nav-links a {
+  color: #0ff;
   font-size: 16px;
   font-weight: 500;
   padding: 8px 15px;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: 0.3s;
   text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
 }
 
-.navbar a:hover, .navbar button:hover {
+.nav-links a:hover {
   background-color: rgba(0, 255, 255, 0.2);
   color: #fff;
 }
 
-.navbar button {
+/* כפתורי הפרופיל והיציאה */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-buttons button {
   background-color: #ff00ff !important;
   border-radius: 5px;
   padding: 8px 20px;
@@ -98,24 +99,36 @@ a:hover {
   box-shadow: 0 0 10px #ff00ff;
 }
 
-.navbar span {
+/* שם המשתמש */
+.user-name span {
   font-size: 18px;
   font-weight: bold;
   color: white;
 }
 
+/* התאמות למסכים קטנים */
 @media (max-width: 768px) {
   .navbar {
       flex-direction: column;
       align-items: flex-start;
   }
 
-  .navbar ul {
+  .nav-links {
       flex-direction: column;
       width: 100%;
   }
 
-  .navbar li {
+  .nav-links li {
       margin: 10px 0;
+  }
+
+  .nav-buttons {
+      width: 100%;
+      justify-content: center;
+      margin-top: 10px;
+  }
+
+  .nav-buttons button {
+      width: 100%;
   }
 }

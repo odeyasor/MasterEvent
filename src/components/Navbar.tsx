@@ -28,16 +28,14 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="navbar">
-      <ul>
-        {/* מציגים את שם המשתמש רק אם יש */}
+      <ul className="nav-links">
+        {/* הצגת שם המשתמש אם קיים */}
         {userName && (
-          <li>
+          <li className="user-name">
             <span>שלום, {userName}!</span>
           </li>
         )}
-        <li>
-          <button onClick={()=>navigate(`/organizer-form/${userId}`) }>הפרופיל שלי</button>
-        </li>
+
         <li>
           <Link to="/events">אירועים</Link>
         </li>
@@ -47,15 +45,14 @@ const Navbar: React.FC = () => {
         <li>
           <Link to="/Home">בית</Link>
         </li>
-        <li>
-          <Link to="/images">תמונות</Link>
-        </li>
-        <li>
-          <button onClick={handleLogout}>יציאה</button>
-        </li>
       </ul>
+
+      {/* אזור הכפתורים - הפרופיל שלי ויציאה */}
+      <div className="nav-buttons">
+        <button onClick={() => navigate(`/organizer-form/${userId}`)}>הפרופיל שלי</button>
+        <button onClick={handleLogout}>יציאה</button>
+      </div>
     </nav>
   );
 };
-
 export default Navbar;
